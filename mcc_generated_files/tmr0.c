@@ -50,7 +50,7 @@
 
 #include <xc.h>
 #include "tmr0.h"
-
+#include "mcc.h"
 /**
   Section: Global Variables Definitions
 */
@@ -153,7 +153,7 @@ void TMR0_ISR(void)
         contador = 1;
     }
     PORTD = contador;
-    PORTCbits.RC0 = !PORTCbits.RC0;
+    //IO_RC0_Toggle();
 }
 
 
