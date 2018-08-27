@@ -45,18 +45,18 @@
 */
 
 #include "mcc.h"
-
+#include "../shift_io.h"
 
 void SYSTEM_Initialize(void)
 {
-
-    INTERRUPT_Initialize();
+    //INTERRUPT_Initialize();
     PIN_MANAGER_Initialize();
     OSCILLATOR_Initialize();
     //SPI_Initialize();
     TMR0_Initialize();
     EUSART_Initialize();
-    INTCONbits.GIEH = 1;
+    //INTCONbits.GIEH = 1;
+    InitCD4014();
 }
 
 void OSCILLATOR_Initialize(void)
