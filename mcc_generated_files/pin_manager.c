@@ -24,26 +24,28 @@
 */
 
 /*
-    (c) 2018 Microchip Technology Inc. and its subsidiaries. 
-    
-    Subject to your compliance with these terms, you may use Microchip software and any 
-    derivatives exclusively with Microchip products. It is your responsibility to comply with third party 
-    license terms applicable to your use of third party software (including open source software) that 
-    may accompany Microchip software.
-    
-    THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER 
-    EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY 
-    IMPLIED WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS 
-    FOR A PARTICULAR PURPOSE.
-    
-    IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE, 
-    INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND 
-    WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP 
-    HAS BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO 
-    THE FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL 
-    CLAIMS IN ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT 
-    OF FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS 
-    SOFTWARE.
+ * PIN MAP
+ * - PORTA -
+ * - PORTB -
+ * - PORTC -
+ * RC0: Shift registers clock 
+ * RC1: Entrada datos serie shift registers
+ * RC2: Salida load shift registers
+ * RC3: SPI CLK (clock SPI)
+ * RC4: SDI (serial data input)
+ * RC5: SDO (serial data output)
+ * RC6: USART TX
+ * RC7: USART RX
+ * - PORTD -
+ * RD0: ahora led, proximo paso lcd
+ * RD1: ahora led, proximo paso lcd
+ * RD2: ahora led, proximo paso lcd
+ * RD3: ahora led, proximo paso lcd
+ * RD4: ahora led, proximo paso lcd
+ * RD5: ahora led, proximo paso lcd
+ * RD6: ahora led, proximo paso lcd
+ * RD7: ahora led, proximo paso lcd
+ * - PORTE -
 */
 
 #include <xc.h>
@@ -62,13 +64,13 @@ void PIN_MANAGER_Initialize(void)
     LATC = 0x00;
 
     /**
-    TRISx registers
+    TRISx regusters --> Ver mapa de Pines arriba
     */
-    TRISE = 0x07; // en este puerto estan conectados los leds
+    TRISE = 0x07;
     TRISA = 0xFF;
     TRISB = 0xFF;
-    TRISC = 0xD6;
-    TRISD = 0x00;
+    TRISC = 0x92; // 1001 - 0010
+    TRISD = 0x00; // en este puerto estan conectados los leds
 
     /**
     ANSELx registers

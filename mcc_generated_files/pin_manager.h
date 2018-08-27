@@ -59,6 +59,52 @@
 #define PULL_UP_ENABLED      1
 #define PULL_UP_DISABLED     0
 
+// get/set IO_RC0 aliases
+#define IO_RC0_TRIS                 TRISCbits.TRISC0
+#define IO_RC0_LAT                  LATCbits.LATC0
+#define IO_RC0_PORT                 PORTCbits.RC0
+#define IO_RC0_SetHigh()            do { LATCbits.LATC0 = 1; } while(0)
+#define IO_RC0_SetLow()             do { LATCbits.LATC0 = 0; } while(0)
+#define IO_RC0_Toggle()             do { LATCbits.LATC0 = ~LATCbits.LATC0; } while(0)
+#define IO_RC0_GetValue()           PORTCbits.RC0
+#define IO_RC0_SetDigitalInput()    do { TRISCbits.TRISC0 = 1; } while(0)
+#define IO_RC0_SetDigitalOutput()   do { TRISCbits.TRISC0 = 0; } while(0)
+// PortC Bit0 = Salida CLK serie
+#define CLK_CD4014                  PORTCbits.RC0 // Alias del pin CLK para CD4014
+#define CLK_CD4014_SetHigh()        IO_RC0_SetHigh()
+#define CLK_CD4014_SetLow()         IO_RC0_SetLow()
+#define CLK_CD4014_Toggle()         IO_RC0_Toggle()
+
+// get/set IO_RC1 aliases
+#define IO_RC1_TRIS                 TRISCbits.TRISC1
+#define IO_RC1_LAT                  LATCbits.LATC1
+#define IO_RC1_PORT                 PORTCbits.RC1
+#define IO_RC1_SetHigh()            do { LATCbits.LATC1 = 1; } while(0)
+#define IO_RC1_SetLow()             do { LATCbits.LATC1 = 0; } while(0)
+#define IO_RC1_Toggle()             do { LATCbits.LATC1 = ~LATCbits.LATC1; } while(0)
+#define IO_RC1_GetValue()           PORTCbits.RC1
+#define IO_RC1_SetDigitalInput()    do { TRISCbits.TRISC1 = 1; } while(0)
+#define IO_RC1_SetDigitalOutput()   do { TRISCbits.TRISC1 = 0; } while(0)
+// PortC Bit1 = Entrada datos serie
+#define DATA_CD4014                 PORTCbits.RC1 // Alias del pin DATA para CD4014
+#define DATA_CD4014_GetValue()      IO_RC1_GetValue()
+
+// get/set IO_RC2 aliases
+#define IO_RC2_TRIS                 TRISCbits.TRISC2
+#define IO_RC2_LAT                  LATCbits.LATC2
+#define IO_RC2_PORT                 PORTCbits.RC2
+#define IO_RC2_SetHigh()            do { LATCbits.LATC2 = 1; } while(0)
+#define IO_RC2_SetLow()             do { LATCbits.LATC2 = 0; } while(0)
+#define IO_RC2_Toggle()             do { LATCbits.LATC2 = ~LATCbits.LATC2; } while(0)
+#define IO_RC2_GetValue()           PORTCbits.RC2
+#define IO_RC2_SetDigitalInput()    do { TRISCbits.TRISC2 = 1; } while(0)
+#define IO_RC2_SetDigitalOutput()   do { TRISCbits.TRISC2 = 0; } while(0)
+// PortC Bit2 = Salida LOAD serie entradas
+#define LOAD_CD4014                 PORTCbits.RC2 // Alias del pin CLK para CD4014
+#define LOAD_CD4014_SetHigh()       IO_RC2_SetHigh()
+#define LOAD_CD4014_SetLow()        IO_RC2_SetLow()
+#define LOAD_CD4014_Toggle()        IO_RC2_Toggle()
+
 // get/set SCK aliases
 #define SCK_TRIS                 TRISCbits.TRISC3
 #define SCK_LAT                  LATCbits.LATC3
@@ -91,6 +137,28 @@
 #define SDO_GetValue()           PORTCbits.RC5
 #define SDO_SetDigitalInput()    do { TRISCbits.TRISC5 = 1; } while(0)
 #define SDO_SetDigitalOutput()   do { TRISCbits.TRISC5 = 0; } while(0)
+
+// get/set TX aliases
+#define TX_TRIS                 TRISCbits.TRISC6
+#define TX_LAT                  LATCbits.LATC6
+#define TX_PORT                 PORTCbits.RC6
+#define TX_SetHigh()            do { LATCbits.LATC6 = 1; } while(0)
+#define TX_SetLow()             do { LATCbits.LATC6 = 0; } while(0)
+#define TX_Toggle()             do { LATCbits.LATC6 = ~LATCbits.LATC6; } while(0)
+#define TX_GetValue()           PORTCbits.RC6
+#define TX_SetDigitalInput()    do { TRISCbits.TRISC6 = 1; } while(0)
+#define TX_SetDigitalOutput()   do { TRISCbits.TRISC6 = 0; } while(0)
+
+// get/set RX aliases
+#define RX_TRIS                 TRISCbits.TRISC7
+#define RX_LAT                  LATCbits.LATC7
+#define RX_PORT                 PORTCbits.RC7
+#define RX_SetHigh()            do { LATCbits.LATC7 = 1; } while(0)
+#define RX_SetLow()             do { LATCbits.LATC7 = 0; } while(0)
+#define RX_Toggle()             do { LATCbits.LATC7 = ~LATCbits.LATC7; } while(0)
+#define RX_GetValue()           PORTCbits.RC7
+#define RX_SetDigitalInput()    do { TRISCbits.TRISC7 = 1; } while(0)
+#define RX_SetDigitalOutput()   do { TRISCbits.TRISC7 = 0; } while(0)
 
 // get/set IO_RD0 aliases
 #define IO_RD0_TRIS                 TRISDbits.TRISD0
