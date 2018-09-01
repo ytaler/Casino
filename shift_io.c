@@ -28,7 +28,7 @@ uint8_t bytes, data;
 
 // los pulsos son de 200ns a 20Mhz, poner retardos para alargarlos si es necesario
 // Primero carga TODOS los datos en paralelo en los registros
-   CLK_CD4014_SetHigh();    // LOAD activo
+   LOAD_CD4014_SetHigh();    // LOAD activo
    CLK_CD4014_SetHigh();     // CLK activo, carga los datos en paralelo
    CLK_CD4014_SetLow();     // CLK inactivo
    LOAD_CD4014_SetLow();     // LOAD inactivo
