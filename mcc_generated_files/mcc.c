@@ -49,14 +49,16 @@
 
 void SYSTEM_Initialize(void)
 {
-    //INTERRUPT_Initialize();
+    INTERRUPT_Initialize();
     PIN_MANAGER_Initialize();
     OSCILLATOR_Initialize();
     //SPI_Initialize();
     TMR0_Initialize();
     EUSART_Initialize();
-    //INTCONbits.GIEH = 1;
+    INTCONbits.GIEH = 1;
+    printf("Inicializando CD4014....\r\n");
     InitCD4014();
+    printf("CD4014 Inicializado.\r\n");
 }
 
 void OSCILLATOR_Initialize(void)
