@@ -57,7 +57,11 @@
 
 #define SYS_FREQ        16000000L
 #define FCY             SYS_FREQ/4
-#define _XTAL_FREQ  16000000
+#define _XTAL_FREQ      16000000
+
+// IMPORTANTE: cada instruccion tiene una demora de 4 ciclos de reloj
+// esto quiere decir que a 16 MHz de reloj cada ciclo se demora 0,063 us = 63 ns
+// y cada intruccion se demora 0,063 us * 4 = 0,252 us = 252 ns
 
 /**
  * @Param
