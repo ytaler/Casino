@@ -26,12 +26,12 @@ uint8_t bytes, data;
    //output_high (PinTestCD4014); // depuracion
 //#endif
 
-// los pulsos son de 200ns a 20Mhz, poner retardos para alargarlos si es necesario
+// los pulsos son de 250ns a 16MHz
 // Primero carga TODOS los datos en paralelo en los registros
-   LOAD_CD4014_SetHigh();    // LOAD activo
-   CLK_CD4014_SetHigh();     // CLK activo, carga los datos en paralelo
-   CLK_CD4014_SetLow();     // CLK inactivo
-   LOAD_CD4014_SetLow();     // LOAD inactivo
+   LOAD_CD4014_SetHigh(); // LOAD activo
+   CLK_CD4014_SetHigh(); // CLK activo, carga los datos en paralelo
+   CLK_CD4014_SetLow(); // CLK inactivo
+   LOAD_CD4014_SetLow(); // LOAD inactivo
 
 // Ahora vamos leyendo en serie en grupos de 8 bits N veces
    for (bytes = 0; bytes < NumeroCD4014; bytes++)
