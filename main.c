@@ -20,13 +20,14 @@
 
 #include "mcc_generated_files/mcc.h"
 #include "shift_io.h"
+#include "net_pozos.h"
 
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
 /******************************************************************************/
 
 int ciclos = 0;
-uint8_t contador = 1;
+uint8_t contador = 1, player[8];
 uint8_t oldDatosCD4014[NumeroCD4014];
 
 /******************************************************************************/
@@ -54,7 +55,20 @@ void main(void)
         oldDatosCD4014[0]=DatosCD4014[0];
         oldDatosCD4014[1]=DatosCD4014[1];
         oldDatosCD4014[2]=DatosCD4014[2];
-        oldDatosCD4014[3]=DatosCD4014[3];        
+        oldDatosCD4014[3]=DatosCD4014[3];
+        // Se individualizan los valores leidos en una variable por player
+        // Se normalizan todas las lecturas de los players a LSB
+        // Para los players impares en donde el dato esta en MSB, se hace un shift
+        // de 4 posiciones de tal modo que quede en el LSB
+        // 7 players
+        player[0]=verificarBotones(DatosCD4014[0]);
+        player[1]=verificarBotones(DatosCD4014[0] >> 4);
+        player[2]=verificarBotones(DatosCD4014[1]);
+        player[3]=verificarBotones(DatosCD4014[1] >> 4);
+        player[4]=verificarBotones(DatosCD4014[2]);
+        player[5]=verificarBotones(DatosCD4014[2] >> 4);
+        player[6]=verificarBotones(DatosCD4014[3]);
+        // 
         __delay_ms(250);
     }
 }
