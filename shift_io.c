@@ -4,7 +4,6 @@
 // Es necesario poner los TRIS al valor adecuado
 // Es necesario definir varios datos en "shifth_io.h"
 
-#include <stdint.h>        /* For uint8_t definition */
 #include "shift_io.h"
 #include "mcc_generated_files/mcc.h"
 

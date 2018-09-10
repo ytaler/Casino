@@ -1,3 +1,4 @@
+#include <stdint.h>        /* For uint8_t definition */
 //=============================================================================
 // Funciones para leer y escribir datos serie a través de los registros
 // CD 4014 (8 entradas)
