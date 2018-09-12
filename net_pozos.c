@@ -1,6 +1,10 @@
 #include "net_pozos.h"
 
-uint8_t verificarBotones(uint8_t datos){
+uint8_t verificarBotonesPlayer(uint8_t datos){
+    // descomentar para debug de comportamiento de botones.
+    // Con este codigo se permite un solo boton pulsado a la vez
+    // cuando hay dos botones se devuelve cero
+    //datos = 0x03;
     uint8_t contador = 0;
     datos &= 0x0F;
     if (datos & 0x01)

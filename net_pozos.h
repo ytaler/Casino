@@ -64,7 +64,7 @@ extern "C" {
  *  TODO
     </code>
 */
-uint8_t verificarBotones(uint8_t);
+uint8_t verificarBotonesPlayer(uint8_t);
 
 #ifdef	__cplusplus
 }
