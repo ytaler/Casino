@@ -27,7 +27,7 @@
 /******************************************************************************/
 
 int ciclos = 0;
-uint8_t contador = 1, player[8];
+uint8_t contador = 1, player[8], dealerSelectPlayer, dealerPagaDealer, dealerPagaPlayer;
 uint8_t oldDatosCD4014[NumeroCD4014];
 
 /******************************************************************************/
@@ -61,14 +61,19 @@ void main(void)
         // Para los players impares en donde el dato esta en MSB, se hace un shift
         // de 4 posiciones de tal modo que quede en el LSB
         // 7 players
-        player[0]=verificarBotones(DatosCD4014[0]);
-        player[1]=verificarBotones(DatosCD4014[0] >> 4);
-        player[2]=verificarBotones(DatosCD4014[1]);
-        player[3]=verificarBotones(DatosCD4014[1] >> 4);
-        player[4]=verificarBotones(DatosCD4014[2]);
-        player[5]=verificarBotones(DatosCD4014[2] >> 4);
-        player[6]=verificarBotones(DatosCD4014[3]);
+        player[0]=verificarBotonesPlayer(DatosCD4014[0]);
+        player[1]=verificarBotonesPlayer(DatosCD4014[0] >> 4);
+        player[2]=verificarBotonesPlayer(DatosCD4014[1]);
+        player[3]=verificarBotonesPlayer(DatosCD4014[1] >> 4);
+        player[4]=verificarBotonesPlayer(DatosCD4014[2]);
+        player[5]=verificarBotonesPlayer(DatosCD4014[2] >> 4);
+        player[6]=verificarBotonesPlayer(DatosCD4014[3]);
+        // Si se decide agregar un octavo player descomentar linea inferior
+        //player[7]=verificarBotonesPlayer(DatosCD4014[3] >> 4);
         // 
+        dealerSelectPlayer=verificarSeleccionPlayer(DatosCD4014[4]);
+        dealerPagaDealer=verificarPagoDealer(DatosCD4014[5]);
+        dealerPagaPlayer=verificarPagoPlayer(DatosCD4014[6]);
         __delay_ms(250);
     }
 }
