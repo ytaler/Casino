@@ -71,9 +71,9 @@ void main(void)
         // Si se decide agregar un octavo player descomentar linea inferior
         //player[7]=verificarBotonesPlayer(DatosCD4014[3] >> 4);
         // 
-        dealerSelectPlayer=verificarSeleccionPlayer(DatosCD4014[4]);
-        dealerPagaDealer=verificarPagoDealer(DatosCD4014[5]);
-        dealerPagaPlayer=verificarPagoPlayer(DatosCD4014[6]);
+        dealerSelectPlayer=verificarSeleccionPlayer(&DatosCD4014[4]);
+        dealerPagaDealer=verificarPagoDealer(&DatosCD4014[5]);
+        dealerPagaPlayer=verificarPagoPlayer(&DatosCD4014[6]);
         __delay_ms(250);
     }
 }

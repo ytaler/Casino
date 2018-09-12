@@ -65,6 +65,10 @@ extern "C" {
     </code>
 */
 uint8_t verificarBotonesPlayer(uint8_t);
+uint8_t verificarSeleccionPlayer(uint8_t *);
+uint8_t verificarPagoDealer(uint8_t *);
+uint8_t verificarPagoPlayer(uint8_t *);
+uint8_t chequeo8Bits(uint8_t *);
 
 #ifdef	__cplusplus
 }
