@@ -62,11 +62,11 @@ void main(void)
         // de 4 posiciones de tal modo que quede en el LSB
         // 7 players
         player[0]=verificarBotonesPlayer(DatosCD4014[0]);
-        player[1]=verificarBotonesPlayer(DatosCD4014[0] >> 4);
+        player[1]=verificarBotonesPlayer((uint8_t)(DatosCD4014[0] >> 4));
         player[2]=verificarBotonesPlayer(DatosCD4014[1]);
-        player[3]=verificarBotonesPlayer(DatosCD4014[1] >> 4);
+        player[3]=verificarBotonesPlayer((uint8_t)(DatosCD4014[1] >> 4));
         player[4]=verificarBotonesPlayer(DatosCD4014[2]);
-        player[5]=verificarBotonesPlayer(DatosCD4014[2] >> 4);
+        player[5]=verificarBotonesPlayer((uint8_t)(DatosCD4014[2] >> 4));
         player[6]=verificarBotonesPlayer(DatosCD4014[3]);
         // Si se decide agregar un octavo player descomentar linea inferior
         //player[7]=verificarBotonesPlayer(DatosCD4014[3] >> 4);

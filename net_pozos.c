@@ -10,16 +10,16 @@ uint8_t verificarBotonesPlayer(uint8_t datos){
     datos &= 0x0F;
     temp = datos;
     // se testean 4 bits, comenzando por el bit 0
-    contador += (temp & 0x01);
+    contador += (uint8_t)(temp & 0x01);
     // se rota y se continua con bit 1
     temp >>= 1;    
-    contador += (temp & 0x01);
+    contador += (uint8_t)(temp & 0x01);
     // se rota y se continua con bit 2
     temp >>= 1;    
-    contador += (temp & 0x01);
+    contador += (uint8_t)(temp & 0x01);
     // se rota y se continua con bit 3
     temp >>= 1;    
-    contador += (temp & 0x01);        
+    contador += (uint8_t)(temp & 0x01);        
     if (contador > 1)
         return 0x00;
     return datos;
@@ -29,7 +29,7 @@ uint8_t chequeo8Bits(uint8_t *datos){
     uint8_t i, contador = 0, temp;
     temp = *datos;
     for(i=0; i<8; i++){
-        contador += (temp & 0x01);
+        contador += (uint8_t)(temp & 0x01);
         if (contador > 1){
             return 0x00;
         }
