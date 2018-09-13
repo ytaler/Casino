@@ -16,8 +16,8 @@
 
 // #define PinTestCD4014  PIN_C4
 
-#define NumeroCD4014 4             // Numero de CD4014 en serie
-uint8_t DatosCD4014[NumeroCD4014];    // Array de datos a leer de los CD4014
+#define NumeroCD4014 7 // Numero de CD4014 en serie
+uint8_t DatosCD4014[NumeroCD4014]; // Array de datos a leer de los CD4014
 
 // Prototipos de las funciones:
 //=============================================================================
