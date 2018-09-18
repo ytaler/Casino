@@ -26,7 +26,9 @@
 /*
  * PIN MAP
  * - PORTA -
+ * controlarian led de estado hold/bet y led de players
  * - PORTB -
+ * deberian ir botones importantes para detectar cambios por IRQ
  * - PORTC -
  * RC0: Shift registers clock 
  * RC1: Entrada datos serie shift registers
