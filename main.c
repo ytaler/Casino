@@ -36,26 +36,24 @@ uint8_t oldDatosCD4014[NumeroCD4014];
 
 void main(void)
 {
-    /* Initialize I/O and Peripherals for application */
-    SYSTEM_Initialize();
-    printf("UART Conectada\r\n");
+    // la inicializacion debe hacerlo de tal forma de dejar todos los disp
+    // listos pero apagados o en stand by
+    SYSTEM_Initialize();    
+    printf("Inicio de sistema NetPozos\r\n");
+    while(SPI_Exchange8bit(0x02)=='I'){
+        // chequeo si la mesa esta activa cada 5 segundos
+        __delay_ms(5000);
+    }
+    // Una vez activado el sistema se procede al bucle principal, comenzando
+    // por el estado bet
     while(1)
     {
+        // En estado Bet hay 4 posibilidades:
+        // 1) Los botones del teclado numero por el monto de la apuesta y el player
+        // 2) El pedido de cash out
+        // 3) Los botones del player
+        // 4) El boton de hold --> ¿deberia ir a un RB para detectar por irq?
         ReadCD4014();  // Lee entradas serie
-        if ((DatosCD4014[0] != oldDatosCD4014[0]) ||
-            (DatosCD4014[1] != oldDatosCD4014[1]) ||
-            (DatosCD4014[2] != oldDatosCD4014[2]) ||
-            (DatosCD4014[3] != oldDatosCD4014[3]))
-        {
-            // Muestra los datos leidos solo si ha habido cambios
-            printf("DatosCD4014 [0]:%02X  [1]:%02X  [2]:%02X  [3]:%02X\r\n",
-            DatosCD4014[0], DatosCD4014[1], DatosCD4014[2], DatosCD4014[3]);
-        }
-        // Usado para comparar si ha habido cambios en las entradas
-        oldDatosCD4014[0]=DatosCD4014[0];
-        oldDatosCD4014[1]=DatosCD4014[1];
-        oldDatosCD4014[2]=DatosCD4014[2];
-        oldDatosCD4014[3]=DatosCD4014[3];
         // Se individualizan los valores leidos en una variable por player
         // Se normalizan todas las lecturas de los players a LSB
         // Para los players impares en donde el dato esta en MSB, se hace un shift
@@ -68,9 +66,7 @@ void main(void)
         player[4]=verificarBotonesPlayer(DatosCD4014[2]);
         player[5]=verificarBotonesPlayer((uint8_t)(DatosCD4014[2] >> 4));
         player[6]=verificarBotonesPlayer(DatosCD4014[3]);
-        // Si se decide agregar un octavo player descomentar linea inferior
-        //player[7]=verificarBotonesPlayer(DatosCD4014[3] >> 4);
-        // 
+        //keypad =
         dealerSelectPlayer=verificarSeleccionPlayer(&DatosCD4014[4]);
         dealerPagaDealer=verificarPagoDealer(&DatosCD4014[5]);
         dealerPagaPlayer=verificarPagoPlayer(&DatosCD4014[6]);
