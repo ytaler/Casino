@@ -59,6 +59,25 @@
 #define PULL_UP_ENABLED      1
 #define PULL_UP_DISABLED     0
 
+#define GAME_Clear_Players()        do { PORTA = (uint8_t)(PORTA & 0x80); } while (0)
+#define GAME_Set_Player()           do { PORTA = (uint8_t) ((uint8_t)(PORTA & 0x80) | playerAPagar); } while (0)
+
+// get/set IO_RA7 aliases
+#define IO_RA7_TRIS                 TRISAbits.TRISA7
+#define IO_RA7_LAT                  LATAbits.LATA7
+#define IO_RA7_PORT                 PORTAbits.RA7
+#define IO_RA7_SetHigh()            do { LATAbits.LATA7 = 1; } while(0)
+#define IO_RA7_SetLow()             do { LATAbits.LATA7 = 0; } while(0)
+#define IO_RA7_Toggle()             do { LATAbits.LATA7 = ~LATAbits.LATA7; } while(0)
+#define IO_RA7_GetValue()           PORTAbits.RA7
+#define IO_RA7_SetDigitalInput()    do { TRISAbits.TRISA7 = 1; } while(0)
+#define IO_RA7_SetDigitalOutput()   do { TRISAbits.TRISA7 = 0; } while(0)
+// Porta Bit7 = Salida Led Bet (verde) / Hold (rojo)
+#define GAME_Status                 PORTAbits.RA7 // Alias del pin
+#define GAME_Status_SetBet()        IO_RA7_SetHigh()
+#define GAME_Status_SetHold()       IO_RA7_SetLow()
+#define GAME_Status_Toggle()        IO_RA7_Toggle()
+
 // get/set IO_RC0 aliases
 #define IO_RC0_TRIS                 TRISCbits.TRISC0
 #define IO_RC0_LAT                  LATCbits.LATC0
@@ -69,7 +88,7 @@
 #define IO_RC0_GetValue()           PORTCbits.RC0
 #define IO_RC0_SetDigitalInput()    do { TRISCbits.TRISC0 = 1; } while(0)
 #define IO_RC0_SetDigitalOutput()   do { TRISCbits.TRISC0 = 0; } while(0)
-// PortC Bit0 = Salida CLK serie
+// PortC Bit0 = Salida CLK serie CD4014
 #define CLK_CD4014                  PORTCbits.RC0 // Alias del pin CLK para CD4014
 #define CLK_CD4014_SetHigh()        IO_RC0_SetHigh()
 #define CLK_CD4014_SetLow()         IO_RC0_SetLow()
