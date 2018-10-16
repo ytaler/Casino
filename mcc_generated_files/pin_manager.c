@@ -26,13 +26,23 @@
 /*
  * PIN MAP
  * - PORTA -
- * controlarian led de estado hold/bet y led de players
+ * controlarian led de estado hold/bet y led de players: un led por cada player
+ * y el ultimo pin conmuuta entre hold (rojo) y bet (verde)
+ * RA0: Player 1
+ * RA1: Player 2
+ * RA2: Player 3
+ * RA3: Player 4
+ * RA4: Player 5
+ * RA5: Player 6
+ * RA6: Player 7
+ * RA7: Bet (verde) / Hold (rojo)
  * - PORTB -
- * deberian ir botones importantes para detectar cambios por IRQ
+ * deberian ir botones importantes para detectar cambios por IRQ: cash out, 
+ * hold, bet y clear. A definir despues boton de confirmacion pago dealer / player
  * - PORTC -
  * RC0: Shift registers clock 
  * RC1: Entrada datos serie shift registers
- * RC2: Salida load shift registers
+ * RC2: Salida pin load shift registers
  * RC3: SPI CLK (clock SPI)
  * RC4: SDI (serial data input)
  * RC5: SDO (serial data output)
