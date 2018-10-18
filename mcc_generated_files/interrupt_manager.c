@@ -35,6 +35,10 @@ void  INTERRUPT_Initialize (void)
 
     // TMRI - high priority
     INTCON2bits.TMR0IP = 1;
+
+    // RBI - high priority
+    INTCON2bits.RBIP = 1;
+
 }
 
 void interrupt INTERRUPT_InterruptManagerHigh (void)
@@ -43,6 +47,14 @@ void interrupt INTERRUPT_InterruptManagerHigh (void)
     if(INTCONbits.TMR0IE == 1 && INTCONbits.TMR0IF == 1)
     {
         TMR0_ISR();
+    }
+    else if(INTCONbits.RBIE == 1 && INTCONbits.RBIF == 1)
+    {
+        PIN_MANAGER_IOC();
+}
+    else
+    {
+        //Unhandled Interrupt
     }
 }
 
