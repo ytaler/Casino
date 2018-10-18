@@ -27,11 +27,13 @@
 /******************************************************************************/
 
 int ciclos = 0;
-uint8_t player[7], dealerSelectPlayer, dealerPagaDealer, dealerPagaPlayer, keypad;
-uint8_t playerAPagar=0;
+uint8_t player[7], dealerSelectPlayer, dealerPagaDealer, dealerPagaPlayer, keypad, i;
+uint8_t playerAPagar, tablaLedPlayers;
 uint8_t respuestaSpi;
 uint8_t contador; // usado para los leds, replica en tmr0.c despues borrar
 uint32_t monto=0; // usado para guardar el monto
+bool botonPulsado_Bet = false, botonPulsado_Hold = false, botonPulsado_CashOut = false, botonPulsado_Clear = false;
+char tablaApuestaPlayer[][5] = {{'_','P','P','D','D'},{'_','+','-','+','-'}}; // compensa diferencia de indices con un guion bajo
 char mensajeSpi[15];
 /******************************************************************************/
 /* Main Program                                                               */
@@ -55,19 +57,25 @@ void main(void)
     }
     // Una vez activado el sistema se procede al bucle principal, comenzando
     // por el estado bet (01;B)
+    sprintf(mensajeSpi,"01;B");
+    SPI_Exchange8bitBuffer(mensajeSpi,sizeof(mensajeSpi),NULL);
+    GAME_Status_SetBet(); // Enciende led verde indicando estado Bet
     while(1) // bucle principal del juego
     {        
-        sprintf(mensajeSpi,"01;B");
-        SPI_Exchange8bitBuffer(mensajeSpi,sizeof(mensajeSpi),NULL);
-        GAME_Clear_Players(); // Apaga todos los leds indicadores de los players
-        GAME_Status_SetBet(); // Enciende led verde indicando estado Bet
         // BET equivale a PORTA.RA7 = 1, y Game_Status es PORTA.RA7
+        // Inicializacion de variables, estados, indicadores
+        monto = 0x00;
+        playerAPagar = 0x00;
+        tablaLedPlayers = 0x00;
+        botonPulsado_Clear = botonPulsado_CashOut = botonPulsado_Bet = botonPulsado_Hold = false;
+        GAME_Clear_Players(); // Apaga todos los leds indicadores de los players        
+        // ToDo: Escribir algun mensaje en lcd?
         while(GAME_Status){
             // En estado Bet hay 4 posibilidades:
             // 1) Los botones del teclado numero por el monto de la apuesta y el player
             // 2) El pedido de cash out
             // 3) Los botones del player
-            // 4) El boton de hold --> ¿deberia ir a un RB para detectar por irq?
+            // 4) El boton de hold
             ReadCD4014();  // Lee entradas serie
             // Se individualizan los valores leidos en una variable por player
             // Se normalizan todas las lecturas de los players a LSB
@@ -88,12 +96,16 @@ void main(void)
             if(keypad>0){
                 monto *= 10;
                 monto += keypad;
-                // Acciones a realizar: mostrar/actualizar datos en lcd
+                // ToDo: mostrar/actualizar datos en lcd
             }
             // 2) Cargar monto en un player o marcar para realizar pago
             if(dealerSelectPlayer>0){
                 // Hay dos posibilidades: realizar apuesta o marcar player
                 // para luego realizar cash out.
+                // Almacenamos el player en la variable para indicar con led player
+                playerAPagar = dealerSelectPlayer;
+                // Enciende el player seleccionado para pagar
+                GAME_Set_Player();
                 if(monto > 0){
                     // significa que se habia ingresado un monto y esta listo
                     // para comprar creditos se debe enviar mensaje:
@@ -101,32 +113,71 @@ void main(void)
                     sprintf(mensajeSpi,"03;%u;%u",dealerSelectPlayer,monto);
                     SPI_Exchange8bitBuffer(mensajeSpi,sizeof(mensajeSpi),NULL);
                     printf(mensajeSpi);
-                }
-                else{
-                    // marcar player para esperar el cash out
-                    playerAPagar = dealerSelectPlayer;
-                    // Enciende el player seleccionado para pagar
-                    GAME_Set_Player();
+                    // ToDo: mostrar importe en pesos en el LCD, por ejemplo
+                    // "Player %u", dealerSelectPlayer
+                    // "Monto $ %u", monto
+                    monto = 0x00;
                 }
             }
-            // testear cash out, hold, y clear.
-            // si es cash out se debe retirar dinero
-            // si es hold se debe cambiar de estado 
-            // si es clear se debe borrar el monto, apagar led players, borrar lcd...
-            __delay_ms(250);
+            for(i = 0; i < 7; i++){
+                if(player[i] > 0){
+                    sprintf(mensajeSpi,"05;1;%c;%c",tablaApuestaPlayer[0][player[i]],tablaApuestaPlayer[1][player[i]]);
+                    SPI_Exchange8bitBuffer(mensajeSpi,sizeof(mensajeSpi),NULL);
+                    printf(mensajeSpi);
+                    // ToDo: codigo de marcar led en caso que player haya apostado a otro player
+                    if(player[i] < 3){
+                        // esta tabla almacena las apuestas de player a player para luego mostrarlos
+                        tablaLedPlayers |= (uint8_t) (0x01 << i);
+                    }
+                }
+            }         
+            if(botonPulsado_CashOut){
+                if(playerAPagar > 0){
+                    botonPulsado_CashOut = false;
+                    sprintf(mensajeSpi,"04;%u",playerAPagar);
+                    SPI_Exchange8bitBuffer(mensajeSpi,sizeof(mensajeSpi),NULL);
+                    // ToDo: deberia esperar respuesta informando la cantidad
+                    // ToDo: mensajes en lcd, por ejemplo
+                    // "Cash Out Player %u", playerAPagar
+                    // "Importe a cobrar $ %s", importe
+                    printf(mensajeSpi);
+                    GAME_Clear_Players(); // Apaga todos los leds indicadores de los players
+                    playerAPagar = 0x00; // Elimina valor variable                    
+                }
+            }
+            if(botonPulsado_Clear){
+                botonPulsado_Clear = botonPulsado_CashOut = botonPulsado_Bet = botonPulsado_Hold = false;
+                monto = 0x00;
+                playerAPagar = 0x00;
+                GAME_Clear_Players(); // Apaga todos los leds indicadores de los players
+                // ToDo: borrar datos lcd
+            }
+            if(botonPulsado_Hold){
+                sprintf(mensajeSpi,"01;H");
+                SPI_Exchange8bitBuffer(mensajeSpi,sizeof(mensajeSpi),NULL);
+                GAME_Clear_Players(); // Apaga todos los leds indicadores de los players
+                GAME_Status_SetHold(); // Enciende led rojo indicando estado Hold
+            }
+            __delay_ms(250); // despues de tantas funciones probable que no sea necesario PROBAR
         }
-        sprintf(mensajeSpi,"01;H");
-        SPI_Exchange8bitBuffer(mensajeSpi,sizeof(mensajeSpi),NULL);
-        GAME_Clear_Players(); // Apaga todos los leds indicadores de los players
-        GAME_Status_SetHold(); // Enciende led rojo indicando estado Hold
+        // HOLD equivale a PORTA.RA7 = 0, y Game_Status es PORTA.RA7
+        // Se encienden los leds de los players que apostaron a players
+        GAME_Set_Players();
         while(!GAME_Status){
             // En estado Hold hay X posibilidades:
-            // x) El boton de Bet --> ¿deberia ir a un RB para detectar por irq?
+            // x) El boton de Bet
             ReadCD4014();  // Lee entradas serie
-            // Se ignoran las pulsaciones de los players
+            // Se ignoran las pulsaciones de los players y del teclado numerico
+            player[0]=player[1]=player[2]=player[3]=player[4]=player[5]=player[6]=keypad=0x00;
             dealerSelectPlayer=verificarSeleccionPlayer(&DatosCD4014[5]);
             dealerPagaDealer=verificarPagoDealer(&DatosCD4014[6]);
             dealerPagaPlayer=verificarPagoPlayer(&DatosCD4014[7]);
+            if(botonPulsado_Bet){
+                sprintf(mensajeSpi,"01;B");
+                SPI_Exchange8bitBuffer(mensajeSpi,sizeof(mensajeSpi),NULL);
+                GAME_Clear_Players(); // Apaga todos los leds indicadores de los players
+                GAME_Status_SetBet(); // Enciende led rojo indicando estado Hold
+            }
             __delay_ms(250);
         }
     }
