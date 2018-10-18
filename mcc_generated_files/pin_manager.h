@@ -60,7 +60,8 @@
 #define PULL_UP_DISABLED     0
 
 #define GAME_Clear_Players()        do { PORTA = (uint8_t)(PORTA & 0x80); } while (0)
-#define GAME_Set_Player()           do { PORTA = (uint8_t) ((uint8_t)(PORTA & 0x80) | playerAPagar); } while (0)
+#define GAME_Set_Player()           do { PORTA = (uint8_t) ((uint8_t)(PORTA & 0x80) | (uint8_t)( 0x01 << playerAPagar)); } while (0)
+#define GAME_Set_Players()           do { PORTA = (uint8_t) ((uint8_t)(PORTA & 0x80) | (uint8_t) tablaLedPlayers ); } while (0)
 
 // get/set IO_RA7 aliases
 #define IO_RA7_TRIS                 TRISAbits.TRISA7
@@ -77,6 +78,58 @@
 #define GAME_Status_SetBet()        IO_RA7_SetHigh()
 #define GAME_Status_SetHold()       IO_RA7_SetLow()
 #define GAME_Status_Toggle()        IO_RA7_Toggle()
+
+// get/set IO_RB4 aliases
+#define IO_RB4_TRIS                 TRISBbits.TRISB4
+#define IO_RB4_LAT                  LATBbits.LATB4
+#define IO_RB4_PORT                 PORTBbits.RB4
+#define IO_RB4_SetHigh()            do { LATBbits.LATB4 = 1; } while(0)
+#define IO_RB4_SetLow()             do { LATBbits.LATB4 = 0; } while(0)
+#define IO_RB4_Toggle()             do { LATBbits.LATB4 = ~LATBbits.LATB4; } while(0)
+#define IO_RB4_GetValue()           PORTBbits.RB4
+#define IO_RB4_SetDigitalInput()    do { TRISBbits.TRISB4 = 1; } while(0)
+#define IO_RB4_SetDigitalOutput()   do { TRISBbits.TRISB4 = 0; } while(0)
+// PORTB Bit7 = Entrada boton Bet
+#define BotonBet                    PORTBbits.RB4 // Alias del pin
+
+// get/set IO_RB5 aliases
+#define IO_RB5_TRIS                 TRISBbits.TRISB5
+#define IO_RB5_LAT                  LATBbits.LATB5
+#define IO_RB5_PORT                 PORTBbits.RB5
+#define IO_RB5_SetHigh()            do { LATBbits.LATB5 = 1; } while(0)
+#define IO_RB5_SetLow()             do { LATBbits.LATB5 = 0; } while(0)
+#define IO_RB5_Toggle()             do { LATBbits.LATB5 = ~LATBbits.LATB5; } while(0)
+#define IO_RB5_GetValue()           PORTBbits.RB5
+#define IO_RB5_SetDigitalInput()    do { TRISBbits.TRISB5 = 1; } while(0)
+#define IO_RB5_SetDigitalOutput()   do { TRISBbits.TRISB5 = 0; } while(0)
+// PORTB Bit7 = Entrada boton Bet
+#define BotonHold                    PORTBbits.RB5 // Alias del pin
+
+// get/set IO_RB6 aliases
+#define IO_RB6_TRIS                 TRISBbits.TRISB6
+#define IO_RB6_LAT                  LATBbits.LATB6
+#define IO_RB6_PORT                 PORTBbits.RB6
+#define IO_RB6_SetHigh()            do { LATBbits.LATB6 = 1; } while(0)
+#define IO_RB6_SetLow()             do { LATBbits.LATB6 = 0; } while(0)
+#define IO_RB6_Toggle()             do { LATBbits.LATB6 = ~LATBbits.LATB6; } while(0)
+#define IO_RB6_GetValue()           PORTBbits.RB6
+#define IO_RB6_SetDigitalInput()    do { TRISBbits.TRISB6 = 1; } while(0)
+#define IO_RB6_SetDigitalOutput()   do { TRISBbits.TRISB6 = 0; } while(0)
+// PORTB Bit6 = Entrada boton CashOut
+#define BotonCashOut                 PORTBbits.RB6 // Alias del pin
+
+// get/set IO_RB7 aliases
+#define IO_RB7_TRIS                 TRISBbits.TRISB7
+#define IO_RB7_LAT                  LATBbits.LATB7
+#define IO_RB7_PORT                 PORTBbits.RB7
+#define IO_RB7_SetHigh()            do { LATBbits.LATB7 = 1; } while(0)
+#define IO_RB7_SetLow()             do { LATBbits.LATB7 = 0; } while(0)
+#define IO_RB7_Toggle()             do { LATBbits.LATB7 = ~LATBbits.LATB7; } while(0)
+#define IO_RB7_GetValue()           PORTBbits.RB7
+#define IO_RB7_SetDigitalInput()    do { TRISBbits.TRISB7 = 1; } while(0)
+#define IO_RB7_SetDigitalOutput()   do { TRISBbits.TRISB7 = 0; } while(0)
+// PORTB Bit7 = Entrada boton Clear
+#define BotonClear                 PORTBbits.RB7 // Alias del pin
 
 // get/set IO_RC0 aliases
 #define IO_RC0_TRIS                 TRISCbits.TRISC0
