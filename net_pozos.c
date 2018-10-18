@@ -21,7 +21,7 @@ uint8_t verificarBotonesPlayer(uint8_t datos){
     temp >>= 1;    
     contador += (uint8_t)(temp & 0x01);        
     if (contador > 1)
-        return 0x00;
+        datos = 0x00;
     return datos;
 }
 
@@ -31,7 +31,8 @@ uint8_t chequeo8Bits(uint8_t *datos, uint8_t mascara){
     for(i=0; i<8; i++){
         contador += (uint8_t)(temp & 0x01);
         if (contador > 1){
-            return 0x00;
+            id = 0x00;
+            break;
         }
         if((uint8_t)(temp & 0x01)){
 			id=(uint8_t) (i+1);
