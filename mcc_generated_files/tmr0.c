@@ -107,7 +107,7 @@ void TMR0_StopTimer(void)
     T0CONbits.TMR0ON = 0;
 }
 
-uint8_t TMR0_ReadTimer(void)
+uint16_t TMR0_ReadTimer(void)
 {
     uint8_t readVal;
 
@@ -117,7 +117,7 @@ uint8_t TMR0_ReadTimer(void)
     return readVal;
 }
 
-void TMR0_WriteTimer(uint8_t timerVal)
+void TMR0_WriteTimer(uint16_t timerVal)
 {
     // Write to the Timer0 registers, low register only
     TMR0L = timerVal;
