@@ -37,8 +37,10 @@
  * RA6: Player 7
  * RA7: Bet (verde) / Hold (rojo)
  * - PORTB -
- * deberian ir botones importantes para detectar cambios por IRQ: cash out, 
- * hold, bet y clear. A definir despues boton de confirmacion pago dealer / player
+ * RB4: Bet
+ * RB5: Hold
+ * RB6: Cash out
+ * RB7: Clear
  * - PORTC -
  * RC0: Shift registers clock 
  * RC1: Entrada datos serie shift registers
@@ -99,12 +101,23 @@ void PIN_MANAGER_Initialize(void)
     /**
     ODx registers
     */    
+    // Clear Interrupt flag before enabling the interrupt
+    INTCONbits.RBIF = 0;
+
+    // Enabling RB Port Change interrupt.
+    INTCONbits.RBIE = 1;
 }
   
 void PIN_MANAGER_IOC(void)
 {   
+    extern bool botonPulsado_Bet, botonPulsado_Hold, botonPulsado_CashOut, botonPulsado_Clear;
 	// Clear global Interrupt-On-Change flag
     INTCONbits.RBIF = 0;
+
+    if (BotonBet) botonPulsado_Bet = true;    
+    if (BotonHold) botonPulsado_Hold = true;    
+    if (BotonCashOut) botonPulsado_CashOut = true;    
+    if (BotonClear) botonPulsado_Clear = true;  
 }
 
 /**
