@@ -79,6 +79,32 @@
 #define GAME_Status_SetHold()       IO_RA7_SetLow()
 #define GAME_Status_Toggle()        IO_RA7_Toggle()
 
+// get/set IO_RB0 aliases
+#define IO_RB0_TRIS                 TRISBbits.TRISB0
+#define IO_RB0_LAT                  LATBbits.LATB0
+#define IO_RB0_PORT                 PORTBbits.RB0
+#define IO_RB0_SetHigh()            do { LATBbits.LATB0 = 1; } while(0)
+#define IO_RB0_SetLow()             do { LATBbits.LATB0 = 0; } while(0)
+#define IO_RB0_Toggle()             do { LATBbits.LATB0 = ~LATBbits.LATB0; } while(0)
+#define IO_RB0_GetValue()           PORTBbits.RB0
+#define IO_RB0_SetDigitalInput()    do { TRISBbits.TRISB0 = 1; } while(0)
+#define IO_RB0_SetDigitalOutput()   do { TRISBbits.TRISB0 = 0; } while(0)
+// PORTB Bit0 = Boton de Seguridad Pago Dealer
+#define botonPagoDealer             PORTBbits.RB0 // Alias del pin
+
+// get/set IO_RB1 aliases
+#define IO_RB1_TRIS                 TRISBbits.TRISB1
+#define IO_RB1_LAT                  LATBbits.LATB1
+#define IO_RB1_PORT                 PORTBbits.RB1
+#define IO_RB1_SetHigh()            do { LATBbits.LATB1 = 1; } while(0)
+#define IO_RB1_SetLow()             do { LATBbits.LATB1 = 0; } while(0)
+#define IO_RB1_Toggle()             do { LATBbits.LATB1 = ~LATBbits.LATB1; } while(0)
+#define IO_RB1_GetValue()           PORTBbits.RB1
+#define IO_RB1_SetDigitalInput()    do { TRISBbits.TRISB1 = 1; } while(0)
+#define IO_RB1_SetDigitalOutput()   do { TRISBbits.TRISB1 = 0; } while(0)
+// PORTB Bit1 = Boton de Seguridad Pago Player
+#define botonPagoPlayer             PORTBbits.RB1 // Alias del pin
+
 // get/set IO_RB4 aliases
 #define IO_RB4_TRIS                 TRISBbits.TRISB4
 #define IO_RB4_LAT                  LATBbits.LATB4
@@ -342,9 +368,6 @@ void PIN_MANAGER_Initialize (void);
  * @Example
     PIN_MANAGER_IOC();
  */
-void PIN_MANAGER_IOC(void);
-
-
 
 #endif // PIN_MANAGER_H
 /**
