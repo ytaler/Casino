@@ -120,6 +120,10 @@ void INTERRUPT_Initialize (void);
  */
 void interrupt INTERRUPT_InterruptManager (void);
 
+void RB47_ISR(void);
+void RB0_ISR(void);
+void RB1_ISR(void);
+
 #endif  // INTERRUPT_MANAGER_H
 /**
  End of File
