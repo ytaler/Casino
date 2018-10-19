@@ -37,6 +37,8 @@
  * RA6: Player 7
  * RA7: Bet (verde) / Hold (rojo)
  * - PORTB -
+ * RB0: Boton Seguridad Pago Dealer
+ * RB1: Boton Seguridad Pago Player
  * RB4: Bet
  * RB5: Hold
  * RB6: Cash out
@@ -100,24 +102,7 @@ void PIN_MANAGER_Initialize(void)
 
     /**
     ODx registers
-    */    
-    // Clear Interrupt flag before enabling the interrupt
-    INTCONbits.RBIF = 0;
-
-    // Enabling RB Port Change interrupt.
-    INTCONbits.RBIE = 1;
-}
-  
-void PIN_MANAGER_IOC(void)
-{   
-    extern bool botonPulsado_Bet, botonPulsado_Hold, botonPulsado_CashOut, botonPulsado_Clear;
-	// Clear global Interrupt-On-Change flag
-    INTCONbits.RBIF = 0;
-
-    if (BotonBet) botonPulsado_Bet = true;    
-    if (BotonHold) botonPulsado_Hold = true;    
-    if (BotonCashOut) botonPulsado_CashOut = true;    
-    if (BotonClear) botonPulsado_Clear = true;  
+    */
 }
 
 /**
