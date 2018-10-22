@@ -46,6 +46,7 @@
 
 #include "mcc.h"
 #include "../shift_io.h"
+#include "../lcd.h"
 
 void SYSTEM_Initialize(void)
 {
@@ -59,6 +60,9 @@ void SYSTEM_Initialize(void)
     printf("Inicializando CD4014....\r\n");
     InitCD4014();
     printf("CD4014 Inicializado.\r\n");
+    printf("Inicializando LCD....\r\n");
+    lcd_init();
+    printf("LCD Inicializado.\r\n");
 }
 
 void OSCILLATOR_Initialize(void)
