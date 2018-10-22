@@ -63,6 +63,10 @@
 #define GAME_Set_Player()           do { PORTA = (uint8_t) ((uint8_t)(PORTA & 0x80) | (uint8_t)( 0x01 << playerAPagar)); } while (0)
 #define GAME_Set_Players()           do { PORTA = (uint8_t) ((uint8_t)(PORTA & 0x80) | (uint8_t) tablaLedPlayers ); } while (0)
 
+// ****************************************************************************
+// ********************               PORT A               ********************
+// ****************************************************************************
+
 // get/set IO_RA7 aliases
 #define IO_RA7_TRIS                 TRISAbits.TRISA7
 #define IO_RA7_LAT                  LATAbits.LATA7
@@ -144,6 +148,10 @@
 // PORTB Bit6 = Entrada boton CashOut
 #define BotonCashOut                 PORTBbits.RB6 // Alias del pin
 
+// ****************************************************************************
+// ********************               PORT B               ********************
+// ****************************************************************************
+
 // get/set IO_RB7 aliases
 #define IO_RB7_TRIS                 TRISBbits.TRISB7
 #define IO_RB7_LAT                  LATBbits.LATB7
@@ -156,6 +164,10 @@
 #define IO_RB7_SetDigitalOutput()   do { TRISBbits.TRISB7 = 0; } while(0)
 // PORTB Bit7 = Entrada boton Clear
 #define BotonClear                 PORTBbits.RB7 // Alias del pin
+
+// ****************************************************************************
+// ********************               PORT C               ********************
+// ****************************************************************************
 
 // get/set IO_RC0 aliases
 #define IO_RC0_TRIS                 TRISCbits.TRISC0
@@ -258,6 +270,11 @@
 #define RX_SetDigitalInput()    do { TRISCbits.TRISC7 = 1; } while(0)
 #define RX_SetDigitalOutput()   do { TRISCbits.TRISC7 = 0; } while(0)
 
+// ****************************************************************************
+// ********************               PORT D               ********************
+// ****************************************************************************
+#define LCD_PORT                    PORTD
+
 // get/set IO_RD0 aliases
 #define IO_RD0_TRIS                 TRISDbits.TRISD0
 #define IO_RD0_LAT                  LATDbits.LATD0
@@ -312,6 +329,9 @@
 #define IO_RD4_GetValue()           PORTDbits.RD4
 #define IO_RD4_SetDigitalInput()    do { TRISDbits.TRISD4 = 1; } while(0)
 #define IO_RD4_SetDigitalOutput()   do { TRISDbits.TRISD4 = 0; } while(0)
+// PortD Bit4 = Salida E (Enable) para LCD
+#define LCD_E_SetHigh()             IO_RD4_SetHigh()
+#define	LCD_E_SetLow()              IO_RD4_SetLow()
 
 // get/set IO_RD5 aliases
 #define IO_RD5_TRIS                 TRISDbits.TRISD5
@@ -323,6 +343,9 @@
 #define IO_RD5_GetValue()           PORTDbits.RD5
 #define IO_RD5_SetDigitalInput()    do { TRISDbits.TRISD5 = 1; } while(0)
 #define IO_RD5_SetDigitalOutput()   do { TRISDbits.TRISD5 = 0; } while(0)
+// PortD Bit5 = Salida RS (RegisterSelect) para LCD
+#define	LCD_RS_SetHigh()            IO_RD5_SetHigh()
+#define	LCD_RS_SetLow()             IO_RD5_SetLow()
 
 // get/set IO_RD6 aliases
 #define IO_RD6_TRIS                 TRISDbits.TRISD6
@@ -334,6 +357,10 @@
 #define IO_RD6_GetValue()           PORTDbits.RD6
 #define IO_RD6_SetDigitalInput()    do { TRISDbits.TRISD6 = 1; } while(0)
 #define IO_RD6_SetDigitalOutput()   do { TRISDbits.TRISD6 = 0; } while(0)
+// PortD Bit6 = Salida RW (ReadWrite) para LCD
+// RW Se conectó directamente a cero, es decir en modo escritura
+//#define	LCD_RW_SetHigh()            IO_RD6_SetHigh()
+//#define	LCD_RW_SetLow()             IO_RD6_SetLow()
 
 // get/set IO_RD7 aliases
 #define IO_RD7_TRIS                 TRISDbits.TRISD7
@@ -345,6 +372,10 @@
 #define IO_RD7_GetValue()           PORTDbits.RD7
 #define IO_RD7_SetDigitalInput()    do { TRISDbits.TRISD7 = 1; } while(0)
 #define IO_RD7_SetDigitalOutput()   do { TRISDbits.TRISD7 = 0; } while(0)
+
+// ****************************************************************************
+// ********************               PORT E               ********************
+// ****************************************************************************
 
 /**
    @Param
