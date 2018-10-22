@@ -53,14 +53,14 @@
  * RC6: USART TX
  * RC7: USART RX
  * - PORTD -
- * RD0: ahora led, proximo paso lcd
- * RD1: ahora led, proximo paso lcd
- * RD2: ahora led, proximo paso lcd
- * RD3: ahora led, proximo paso lcd
- * RD4: ahora led, proximo paso lcd
- * RD5: ahora led, proximo paso lcd
- * RD6: ahora led, proximo paso lcd
- * RD7: ahora led, proximo paso lcd
+ * RD0: LCD data bus line 0
+ * RD1: LCD data bus line 1
+ * RD2: LCD data bus line 2
+ * RD3: LCD data bus line 3
+ * RD4: Señal E (enable) LCD
+ * RD5: Señal RS (register select) LCD
+ * RD6: Sin uso
+ * RD7: Sin uso
  * - PORTE -
 */
 
