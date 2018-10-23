@@ -35,7 +35,6 @@ uint8_t contador; // usado para los leds, replica en tmr0.c despues borrar
 uint32_t monto=0; // usado para guardar el monto
 bool botonPulsado_Bet = false, botonPulsado_Hold = false, botonPulsado_CashOut = false, botonPulsado_Clear = false;
 bool botonPulsado_PagoDealer = false, botonPulsado_PagoPlayer = false; 
-char tablaApuestaPlayer[][5] = {{'_','P','P','D','D'},{'_','+','-','+','-'}}; // compensa diferencia de indices con un guion bajo
 char mensajeSpi[15];
 /******************************************************************************/
 /* Main Program                                                               */

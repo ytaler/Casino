@@ -71,6 +71,8 @@ uint8_t verificarPagoPlayer(uint8_t *);
 uint8_t chequeo8Bits(uint8_t *, uint8_t);
 uint8_t verificarTecladoNumerico(uint8_t datos1, uint8_t *datos2);
 
+char tablaApuestaPlayer[][5] = {{'_','P','P','D','D'},{'_','+','-','+','-'}}; // compensa diferencia de indices con un guion bajo
+
 char premios[][16] = {
     {' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
     {'E','s','c','a','l','e','r','a',' ','R','e','a','l'},
