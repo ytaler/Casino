@@ -21,6 +21,7 @@
 #include "mcc_generated_files/mcc.h"
 #include "shift_io.h"
 #include "net_pozos.h"
+#include "lcd.h"
 
 /******************************************************************************/
 /* User Global Variable Declaration                                           */
@@ -44,18 +45,30 @@ void main(void)
 {
     // la inicializacion debe hacerlo de tal forma de dejar todos los disp
     // listos pero apagados o en stand by
-    SYSTEM_Initialize();    
-    printf("Inicio de sistema NetPozos\r\n");
-    SPI_Exchange8bit('0');
-    respuestaSpi = SPI_Exchange8bit('2');
-    printf("02;%c\r\n", respuestaSpi);
+    SYSTEM_Initialize();
+    // funciones de comunicacion:
+    // 1) printf --> escritura en uart
+    // 2) lcd_puts --> escritura en lcd
+    // 3) SPI_Exchange8bit y SPI_Exchange8bitBuffer --> escritura SPI
+    printf("Inicio de sistema NetPozos\r\nEsperando activacion de mesa");
+    lcd_command_8bit(LCD_CLEAR_DISPLAY);
+    lcd_puts("Sistema NetPozos");
+    sprintf(mensajeSpi,"02");
+    SPI_Exchange8bitBuffer(mensajeSpi,sizeof(mensajeSpi),NULL);
+    respuestaSpi = 0x00;
+    // ToDo: respuesta SPI por IRQ o respuesta directa de mnesaje .. VER!!!
     while(respuestaSpi == 'I'){
         // chequeo si la mesa esta activa cada 5 segundos
-        SPI_Exchange8bit('0');
-        respuestaSpi = SPI_Exchange8bit('2');
-        printf("02;%c\r\n", respuestaSpi);
+        //sprintf(mensajeSpi,"02;"); // ya fue escrito anteriormente asi que no es necesario, se reusa
+        SPI_Exchange8bitBuffer(mensajeSpi,sizeof(mensajeSpi),NULL);
+        //printf("02;%c\r\n", respuestaSpi);
         __delay_ms(5000);
     }
+    printf("Mesa activada, inicio de juego");
+    lcd_command_8bit(LCD_CLEAR_DISPLAY);
+    lcd_puts("Mesa Activada");
+    lcd_command_8bit(LCD_SEGUNDA_LINEA);
+    lcd_puts("Comienza juego");
     // Una vez activado el sistema se procede al bucle principal, comenzando
     // por el estado bet (01;B)
     sprintf(mensajeSpi,"01;B");
@@ -115,9 +128,10 @@ void main(void)
                     sprintf(mensajeSpi,"03;%u;%u",dealerSelectPlayer,monto);
                     SPI_Exchange8bitBuffer(mensajeSpi,sizeof(mensajeSpi),NULL);
                     printf(mensajeSpi);
-                    // ToDo: mostrar importe en pesos en el LCD, por ejemplo
-                    // "Player %u", dealerSelectPlayer
-                    // "Monto $ %u", monto
+                    lcd_command_8bit(LCD_CLEAR_DISPLAY);
+                    lcd_puts(sprintf("Player %u",dealerSelectPlayer));
+                    lcd_command_8bit(LCD_SEGUNDA_LINEA);
+                    lcd_puts(sprintf("Monto $ %u", monto));
                     monto = 0x00;
                 }
             }
@@ -126,7 +140,6 @@ void main(void)
                     sprintf(mensajeSpi,"05;1;%c;%c",tablaApuestaPlayer[0][player[i]],tablaApuestaPlayer[1][player[i]]);
                     SPI_Exchange8bitBuffer(mensajeSpi,sizeof(mensajeSpi),NULL);
                     printf(mensajeSpi);
-                    // ToDo: codigo de marcar led en caso que player haya apostado a otro player
                     if(player[i] < 3){
                         // esta tabla almacena las apuestas de player a player para luego mostrarlos
                         tablaLedPlayers |= (uint8_t) (0x01 << i);
@@ -139,9 +152,11 @@ void main(void)
                     sprintf(mensajeSpi,"04;%u",playerAPagar);
                     SPI_Exchange8bitBuffer(mensajeSpi,sizeof(mensajeSpi),NULL);
                     // ToDo: deberia esperar respuesta informando la cantidad
-                    // ToDo: mensajes en lcd, por ejemplo
-                    // "Cash Out Player %u", playerAPagar
-                    // "Importe a cobrar $ %s", importe
+                    // usar respuestaSpi
+                    lcd_command_8bit(LCD_CLEAR_DISPLAY);
+                    lcd_puts(sprintf("Player %u",dealerSelectPlayer));
+                    lcd_command_8bit(LCD_SEGUNDA_LINEA);
+                    lcd_puts(sprintf("A cobrar $%u", monto));
                     printf(mensajeSpi);
                     GAME_Clear_Players(); // Apaga todos los leds indicadores de los players
                     playerAPagar = 0x00; // Elimina valor variable                    
@@ -152,7 +167,7 @@ void main(void)
                 monto = 0x00;
                 playerAPagar = 0x00;
                 GAME_Clear_Players(); // Apaga todos los leds indicadores de los players
-                // ToDo: borrar datos lcd
+                lcd_command_8bit(LCD_CLEAR_DISPLAY);
             }
             if(botonPulsado_Hold){
                 sprintf(mensajeSpi,"01;H");
@@ -188,6 +203,11 @@ void main(void)
                 sprintf(mensajeSpi,"06;0;%u",dealerPagaDealer);
                 SPI_Exchange8bitBuffer(mensajeSpi,sizeof(mensajeSpi),NULL);
                 printf(mensajeSpi);
+                // ToDo: mostrar mensaje de pago premio en lcd
+                lcd_command_8bit(LCD_CLEAR_DISPLAY);
+                lcd_puts("Ap. Dealer");
+                lcd_command_8bit(LCD_SEGUNDA_LINEA);
+                lcd_puts(premios[dealerPagaDealer]);
             }
             if( (dealerPagaPlayer > 0) && (botonPulsado_PagoPlayer) && (playerAPagar > 0) ){
                 botonPulsado_PagoPlayer = false;
@@ -196,6 +216,10 @@ void main(void)
                 sprintf(mensajeSpi,"06;%u;%u",playerAPagar,dealerPagaDealer);
                 SPI_Exchange8bitBuffer(mensajeSpi,sizeof(mensajeSpi),NULL);
                 printf(mensajeSpi);
+                lcd_command_8bit(LCD_CLEAR_DISPLAY);
+                lcd_puts(sprintf("Ap. Player %u",playerAPagar));
+                lcd_command_8bit(LCD_SEGUNDA_LINEA);
+                lcd_puts(premios[dealerPagaPlayer]);           
                 playerAPagar = 0x00;
             }
             if( (keypad == 1) && (botonPulsado_Clear) ){
@@ -204,6 +228,7 @@ void main(void)
                 sprintf(mensajeSpi,"07");
                 SPI_Exchange8bitBuffer(mensajeSpi,sizeof(mensajeSpi),NULL);
                 printf(mensajeSpi);
+                lcd_command_8bit(LCD_CLEAR_DISPLAY);
             }
             if(botonPulsado_Bet){
                 sprintf(mensajeSpi,"01;B");
