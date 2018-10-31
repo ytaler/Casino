@@ -39,6 +39,8 @@
  * - PORTB -
  * RB0: Boton Seguridad Pago Dealer
  * RB1: Boton Seguridad Pago Player
+ * RB2: libre
+ * RB3: PWM para alimentacion negativa lcd
  * RB4: Bet
  * RB5: Hold
  * RB6: Cash out
