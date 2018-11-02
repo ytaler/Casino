@@ -67,6 +67,98 @@
 // ********************               PORT A               ********************
 // ****************************************************************************
 
+// get/set LED_PLAYER_1_OUT aliases
+#define LED_PLAYER_1_OUT_TRIS                 TRISAbits.TRISA0
+#define LED_PLAYER_1_OUT_LAT                  LATAbits.LATA0
+#define LED_PLAYER_1_OUT_PORT                 PORTAbits.RA0
+#define LED_PLAYER_1_OUT_ANS                  ANSELbits.ANS0
+#define LED_PLAYER_1_OUT_SetHigh()            do { LATAbits.LATA0 = 1; } while(0)
+#define LED_PLAYER_1_OUT_SetLow()             do { LATAbits.LATA0 = 0; } while(0)
+#define LED_PLAYER_1_OUT_Toggle()             do { LATAbits.LATA0 = ~LATAbits.LATA0; } while(0)
+#define LED_PLAYER_1_OUT_GetValue()           PORTAbits.RA0
+#define LED_PLAYER_1_OUT_SetDigitalInput()    do { TRISAbits.TRISA0 = 1; } while(0)
+#define LED_PLAYER_1_OUT_SetDigitalOutput()   do { TRISAbits.TRISA0 = 0; } while(0)
+#define LED_PLAYER_1_OUT_SetAnalogMode()      do { ANSELbits.ANS0 = 1; } while(0)
+#define LED_PLAYER_1_OUT_SetDigitalMode()     do { ANSELbits.ANS0 = 0; } while(0)
+
+// get/set LED_PLAYER_2_OUT aliases
+#define LED_PLAYER_2_OUT_TRIS                 TRISAbits.TRISA1
+#define LED_PLAYER_2_OUT_LAT                  LATAbits.LATA1
+#define LED_PLAYER_2_OUT_PORT                 PORTAbits.RA1
+#define LED_PLAYER_2_OUT_ANS                  ANSELbits.ANS1
+#define LED_PLAYER_2_OUT_SetHigh()            do { LATAbits.LATA1 = 1; } while(0)
+#define LED_PLAYER_2_OUT_SetLow()             do { LATAbits.LATA1 = 0; } while(0)
+#define LED_PLAYER_2_OUT_Toggle()             do { LATAbits.LATA1 = ~LATAbits.LATA1; } while(0)
+#define LED_PLAYER_2_OUT_GetValue()           PORTAbits.RA1
+#define LED_PLAYER_2_OUT_SetDigitalInput()    do { TRISAbits.TRISA1 = 1; } while(0)
+#define LED_PLAYER_2_OUT_SetDigitalOutput()   do { TRISAbits.TRISA1 = 0; } while(0)
+#define LED_PLAYER_2_OUT_SetAnalogMode()      do { ANSELbits.ANS1 = 1; } while(0)
+#define LED_PLAYER_2_OUT_SetDigitalMode()     do { ANSELbits.ANS1 = 0; } while(0)
+
+// get/set LED_PLAYER_3_OUT aliases
+#define LED_PLAYER_3_OUT_TRIS                 TRISAbits.TRISA2
+#define LED_PLAYER_3_OUT_LAT                  LATAbits.LATA2
+#define LED_PLAYER_3_OUT_PORT                 PORTAbits.RA2
+#define LED_PLAYER_3_OUT_ANS                  ANSELbits.ANS2
+#define LED_PLAYER_3_OUT_SetHigh()            do { LATAbits.LATA2 = 1; } while(0)
+#define LED_PLAYER_3_OUT_SetLow()             do { LATAbits.LATA2 = 0; } while(0)
+#define LED_PLAYER_3_OUT_Toggle()             do { LATAbits.LATA2 = ~LATAbits.LATA2; } while(0)
+#define LED_PLAYER_3_OUT_GetValue()           PORTAbits.RA2
+#define LED_PLAYER_3_OUT_SetDigitalInput()    do { TRISAbits.TRISA2 = 1; } while(0)
+#define LED_PLAYER_3_OUT_SetDigitalOutput()   do { TRISAbits.TRISA2 = 0; } while(0)
+#define LED_PLAYER_3_OUT_SetAnalogMode()      do { ANSELbits.ANS2 = 1; } while(0)
+#define LED_PLAYER_3_OUT_SetDigitalMode()     do { ANSELbits.ANS2 = 0; } while(0)
+
+// get/set LED_PLAYER_4_OUT aliases
+#define LED_PLAYER_4_OUT_TRIS                 TRISAbits.TRISA3
+#define LED_PLAYER_4_OUT_LAT                  LATAbits.LATA3
+#define LED_PLAYER_4_OUT_PORT                 PORTAbits.RA3
+#define LED_PLAYER_4_OUT_ANS                  ANSELbits.ANS3
+#define LED_PLAYER_4_OUT_SetHigh()            do { LATAbits.LATA3 = 1; } while(0)
+#define LED_PLAYER_4_OUT_SetLow()             do { LATAbits.LATA3 = 0; } while(0)
+#define LED_PLAYER_4_OUT_Toggle()             do { LATAbits.LATA3 = ~LATAbits.LATA3; } while(0)
+#define LED_PLAYER_4_OUT_GetValue()           PORTAbits.RA3
+#define LED_PLAYER_4_OUT_SetDigitalInput()    do { TRISAbits.TRISA3 = 1; } while(0)
+#define LED_PLAYER_4_OUT_SetDigitalOutput()   do { TRISAbits.TRISA3 = 0; } while(0)
+#define LED_PLAYER_4_OUT_SetAnalogMode()      do { ANSELbits.ANS3 = 1; } while(0)
+#define LED_PLAYER_4_OUT_SetDigitalMode()     do { ANSELbits.ANS3 = 0; } while(0)
+
+// get/set LED_PLAYER_5_OUT aliases
+#define LED_PLAYER_5_OUT_TRIS                 TRISAbits.TRISA4
+#define LED_PLAYER_5_OUT_LAT                  LATAbits.LATA4
+#define LED_PLAYER_5_OUT_PORT                 PORTAbits.RA4
+#define LED_PLAYER_5_OUT_SetHigh()            do { LATAbits.LATA4 = 1; } while(0)
+#define LED_PLAYER_5_OUT_SetLow()             do { LATAbits.LATA4 = 0; } while(0)
+#define LED_PLAYER_5_OUT_Toggle()             do { LATAbits.LATA4 = ~LATAbits.LATA4; } while(0)
+#define LED_PLAYER_5_OUT_GetValue()           PORTAbits.RA4
+#define LED_PLAYER_5_OUT_SetDigitalInput()    do { TRISAbits.TRISA4 = 1; } while(0)
+#define LED_PLAYER_5_OUT_SetDigitalOutput()   do { TRISAbits.TRISA4 = 0; } while(0)
+
+// get/set LED_PLAYER_6_OUT aliases
+#define LED_PLAYER_6_OUT_TRIS                 TRISAbits.TRISA5
+#define LED_PLAYER_6_OUT_LAT                  LATAbits.LATA5
+#define LED_PLAYER_6_OUT_PORT                 PORTAbits.RA5
+#define LED_PLAYER_6_OUT_ANS                  ANSELbits.ANS4
+#define LED_PLAYER_6_OUT_SetHigh()            do { LATAbits.LATA5 = 1; } while(0)
+#define LED_PLAYER_6_OUT_SetLow()             do { LATAbits.LATA5 = 0; } while(0)
+#define LED_PLAYER_6_OUT_Toggle()             do { LATAbits.LATA5 = ~LATAbits.LATA5; } while(0)
+#define LED_PLAYER_6_OUT_GetValue()           PORTAbits.RA5
+#define LED_PLAYER_6_OUT_SetDigitalInput()    do { TRISAbits.TRISA5 = 1; } while(0)
+#define LED_PLAYER_6_OUT_SetDigitalOutput()   do { TRISAbits.TRISA5 = 0; } while(0)
+#define LED_PLAYER_6_OUT_SetAnalogMode()      do { ANSELbits.ANS4 = 1; } while(0)
+#define LED_PLAYER_6_OUT_SetDigitalMode()     do { ANSELbits.ANS4 = 0; } while(0)
+
+// get/set LED_PLAYER_7_OUT aliases
+#define LED_PLAYER_7_OUT_TRIS                 TRISAbits.TRISA6
+#define LED_PLAYER_7_OUT_LAT                  LATAbits.LATA6
+#define LED_PLAYER_7_OUT_PORT                 PORTAbits.RA6
+#define LED_PLAYER_7_OUT_SetHigh()            do { LATAbits.LATA6 = 1; } while(0)
+#define LED_PLAYER_7_OUT_SetLow()             do { LATAbits.LATA6 = 0; } while(0)
+#define LED_PLAYER_7_OUT_Toggle()             do { LATAbits.LATA6 = ~LATAbits.LATA6; } while(0)
+#define LED_PLAYER_7_OUT_GetValue()           PORTAbits.RA6
+#define LED_PLAYER_7_OUT_SetDigitalInput()    do { TRISAbits.TRISA6 = 1; } while(0)
+#define LED_PLAYER_7_OUT_SetDigitalOutput()   do { TRISAbits.TRISA6 = 0; }
+
 // get/set IO_RA7 aliases
 #define IO_RA7_TRIS                 TRISAbits.TRISA7
 #define IO_RA7_LAT                  LATAbits.LATA7
@@ -108,6 +200,18 @@
 #define IO_RB1_SetDigitalOutput()   do { TRISBbits.TRISB1 = 0; } while(0)
 // PORTB Bit1 = Boton de Seguridad Pago Player
 #define botonPagoPlayer             PORTBbits.RB1 // Alias del pin
+
+// get/set RB3 procedures --> PWM para tension negativa fuente lcd
+#define RB3_SetHigh()               do { LATBbits.LATB3 = 1; } while(0)
+#define RB3_SetLow()                do { LATBbits.LATB3 = 0; } while(0)
+#define RB3_Toggle()                do { LATBbits.LATB3 = ~LATBbits.LATB3; } while(0)
+#define RB3_GetValue()              PORTBbits.RB3
+#define RB3_SetDigitalInput()       do { TRISBbits.TRISB3 = 1; } while(0)
+#define RB3_SetDigitalOutput()      do { TRISBbits.TRISB3 = 0; } while(0)
+#define RB3_SetPullup()             do { WPUBbits.WPUB3 = 1; } while(0)
+#define RB3_ResetPullup()           do { WPUBbits.WPUB3 = 0; } while(0)
+#define RB3_SetAnalogMode()         do { ANSELHbits.ANS9 = 1; } while(0)
+#define RB3_SetDigitalMode()        do { ANSELHbits.ANS9 = 0; } while(0)
 
 // get/set IO_RB4 aliases
 #define IO_RB4_TRIS                 TRISBbits.TRISB4
@@ -359,8 +463,8 @@
 #define IO_RD6_SetDigitalOutput()   do { TRISDbits.TRISD6 = 0; } while(0)
 // PortD Bit6 = Salida RW (ReadWrite) para LCD
 // RW Se conectó directamente a cero, es decir en modo escritura
-//#define	LCD_RW_SetHigh()            IO_RD6_SetHigh()
-//#define	LCD_RW_SetLow()             IO_RD6_SetLow()
+#define	LCD_RW_SetHigh()            IO_RD6_SetHigh()
+#define	LCD_RW_SetLow()             IO_RD6_SetLow()
 
 // get/set IO_RD7 aliases
 #define IO_RD7_TRIS                 TRISDbits.TRISD7
@@ -372,6 +476,10 @@
 #define IO_RD7_GetValue()           PORTDbits.RD7
 #define IO_RD7_SetDigitalInput()    do { TRISDbits.TRISD7 = 1; } while(0)
 #define IO_RD7_SetDigitalOutput()   do { TRISDbits.TRISD7 = 0; } while(0)
+// PortD Bit67 = Salida para control de backligth LCD. Dependiento del 
+// transistor usado (NPN o PNP) se debe ajustar los alias de abajo
+#define	LCD_BackLight_On()          IO_RD7_SetHigh()
+#define	LCD_BackLight_Off()         IO_RD7_SetLow()
 
 // ****************************************************************************
 // ********************               PORT E               ********************
