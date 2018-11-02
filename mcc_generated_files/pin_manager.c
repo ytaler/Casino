@@ -39,7 +39,7 @@
  * - PORTB -
  * RB0: Boton Seguridad Pago Dealer
  * RB1: Boton Seguridad Pago Player
- * RB2: libre
+ * RB2: Libre
  * RB3: PWM para alimentacion negativa lcd
  * RB4: Bet
  * RB5: Hold
@@ -61,9 +61,12 @@
  * RD3: LCD data bus line 3
  * RD4: Señal E (enable) LCD
  * RD5: Señal RS (register select) LCD
- * RD6: ToDo: Señal RW (Read Write) LCD
- * RD7: ToDo: Control BackLight LCD.
+ * RD6: Señal RW (Read Write) LCD
+ * RD7: Control BackLight LCD.
  * - PORTE -
+ * RE0: Libre
+ * RE1: Libre
+ * RE2: Libre
 */
 
 #include <xc.h>
