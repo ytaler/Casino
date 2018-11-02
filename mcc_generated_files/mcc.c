@@ -54,6 +54,8 @@ void SYSTEM_Initialize(void)
     PIN_MANAGER_Initialize();
     OSCILLATOR_Initialize();
     SPI_Initialize();
+    PWM2_Initialize();
+    TMR2_Initialize();
     TMR0_Initialize();
     EUSART_Initialize();
     INTCONbits.GIEH = 1;
