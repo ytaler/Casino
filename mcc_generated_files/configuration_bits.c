@@ -110,7 +110,7 @@
 #pragma config HFOFST = OFF // OFF es 0
 #pragma config LPT1OSC = OFF // OFF es 0
 #pragma config PBADEN = OFF // OFF es 0
-#pragma config CCP2MX = PORTC // CCP2 input/output is multiplexed with RC1
+#pragma config CCP2MX = PORTBE // CCP2 input/output is multiplexed with RC1
 
 //******************************************************************************
 //    CONFIG4L: CONFIGURATION REGISTER 4 LOW
