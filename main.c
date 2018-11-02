@@ -49,6 +49,7 @@ void main(void)
     // 1) printf --> escritura en uart
     // 2) lcd_puts --> escritura en lcd
     // 3) SPI_Exchange8bit y SPI_Exchange8bitBuffer --> escritura SPI
+    LCD_BackLight_Off();
     printf("Inicio de sistema NetPozos\r\nEsperando activacion de mesa");
     lcd_command_8bit(LCD_CLEAR_DISPLAY);
     lcd_puts("Sistema NetPozos");
@@ -63,6 +64,7 @@ void main(void)
         //printf("02;%c\r\n", respuestaSpi);
         __delay_ms(5000);
     }
+    LCD_BackLight_On();
     printf("Mesa activada, inicio de juego");
     lcd_command_8bit(LCD_CLEAR_DISPLAY);
     lcd_puts("Mesa Activada");
