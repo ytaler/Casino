@@ -60,7 +60,7 @@ void lcd_write(unsigned char c){
 /*--------------------------------------------------------------------------*/
 void lcd_command_8bit (unsigned const char c){
 	LCD_RS_SetLow();			// Pongo en cero RS
-	//RW_LOW();			// Pongo en cero RW
+	LCD_RW_SetLow();			// Pongo en cero RW
 	lcd_write(c);
 	if((c==LCD_CLEAR_DISPLAY)||(c==LCD_RETURN_HOME))
 		__delay_us(LCD_ETIME_1);
@@ -70,7 +70,7 @@ void lcd_command_8bit (unsigned const char c){
 /*--------------------------------------------------------------------------*/
 void lcd_putc(unsigned char c) {
 	LCD_RS_SetHigh();			// Pongo en uno RS
-	//RW_LOW();			// Pongo en cero RW
+	LCD_RW_SetLow();			// Pongo en cero RW
 	lcd_write(c);
 }
 /*--------------------------------------------------------------------------*/
@@ -85,6 +85,7 @@ void lcd_puts(const char * s) {
 /*	Inicializar Modulo LCD para interfaz de 4 bits							*/
 /*--------------------------------------------------------------------------*/
 void lcd_init(void) {
+    LCD_RW_SetLow();
 	__delay_ms(16);			// Debo esperar un tiempo mayor a 15ms por
                             // estabilizacion de fuente y otros menesteres
     LCD_PORT = ((LCD_PORT & 0xF0) | (0x03)); // Le escribo el valor 0011 --> Datos primer envio
