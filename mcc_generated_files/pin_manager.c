@@ -61,8 +61,8 @@
  * RD3: LCD data bus line 3
  * RD4: Señal E (enable) LCD
  * RD5: Señal RS (register select) LCD
- * RD6: Sin uso
- * RD7: Sin uso
+ * RD6: ToDo: Señal RW (Read Write) LCD
+ * RD7: ToDo: Control BackLight LCD.
  * - PORTE -
 */
 
@@ -72,33 +72,25 @@
 
 void PIN_MANAGER_Initialize(void)
 {
-    /**
-    LATx registers
-    */
-    LATE = 0x00;
-    LATD = 0x00;
+    // LATx registers
     LATA = 0x00;
     LATB = 0x00;
     LATC = 0x00;
-
-    /**
-    TRISx regusters --> Ver mapa de Pines arriba
-    */
-    TRISE = 0x07;
-    TRISA = 0xFF;
-    TRISB = 0xFF;
+    LATD = 0x00;
+    LATE = 0x00;
+    
+    // TRISx regusters --> Ver mapa de Pines arriba
+    TRISA = 0x00; // 0000 - 0000
+    TRISB = 0xF7; // 1111 - 0111
     TRISC = 0x92; // 1001 - 0010
-    TRISD = 0x00; // en este puerto estan conectados los leds
-
-    /**
-    ANSELx registers
-    */
+    TRISD = 0x00; // 0000 - 0000
+    TRISE = 0x07; // xxxx - x111 
+    
+    // ANSELx registers
     ANSEL = 0x00; // Apagar entradas analogicas
     ANSELH = 0x00; // Apagar entradas analogicas    
     
-    /**
-    WPUx registers
-    */
+    // WPUx registers
     WPUB = 0x00; // deshabilita r pull up para puerto b
     INTCON2bits.nRBPU = 1; // Desabilita resistencias pull up
 
