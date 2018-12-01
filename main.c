@@ -105,7 +105,7 @@ void main(void)
             player[4]=verificarBotonesPlayer(DatosCD4014[2]);
             player[5]=verificarBotonesPlayer((uint8_t)(DatosCD4014[2] >> 4));
             player[6]=verificarBotonesPlayer(DatosCD4014[3]);
-            keypad = verificarTecladoNumerico((uint8_t)(DatosCD4014[3] >> 4),&DatosCD4014[4]);
+            keypad = verificarTecladoNumerico((uint8_t)(DatosCD4014[3] >> 6),&DatosCD4014[4]);
             dealerSelectPlayer=verificarSeleccionPlayer(&DatosCD4014[5]);
             // Una vez leidas todas las variables se procede a la toma de decisiones.
             // 1) Primero se calcula el monto de la apuesta (si es que cambio / hay)
@@ -190,7 +190,7 @@ void main(void)
             // x) El boton de Bet
             ReadCD4014();  // Lee entradas serie
             // Se ignoran las pulsaciones de los players y del teclado numerico
-            keypad = verificarTecladoNumerico((uint8_t)(DatosCD4014[3] >> 4),&DatosCD4014[4]);
+            keypad = verificarTecladoNumerico((uint8_t)(DatosCD4014[3] >> 6),&DatosCD4014[4]);
             dealerSelectPlayer=verificarSeleccionPlayer(&DatosCD4014[5]);
             dealerPagaDealer=verificarPagoDealer(&DatosCD4014[6]);
             dealerPagaPlayer=verificarPagoPlayer(&DatosCD4014[7]);
