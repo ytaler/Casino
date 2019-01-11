@@ -52,22 +52,22 @@ void main(void)
     LCD_BackLight_Off();
     printf("Inicio de sistema NetPozos\r\nEsperando activacion de mesa");
     lcd_command_8bit(LCD_CLEAR_DISPLAY);
-    lcd_puts("Sistema NetPozos");
+    lcd_puts("    Sistema NetPozos");
     sprintf(mensajeSpi,"02");
     SPI_Exchange8bitBuffer(mensajeSpi,sizeof(mensajeSpi),NULL);
     respuestaSpi = 0x00;
     // ToDo: respuesta SPI por IRQ o respuesta directa de mnesaje .. VER!!!
-    while(respuestaSpi == 'I'){
+    /*while(respuestaSpi == 'I'){
         // chequeo si la mesa esta activa cada 5 segundos
         //sprintf(mensajeSpi,"02;"); // ya fue escrito anteriormente asi que no es necesario, se reusa
         SPI_Exchange8bitBuffer(mensajeSpi,sizeof(mensajeSpi),NULL);
         //printf("02;%c\r\n", respuestaSpi);
         __delay_ms(5000);
-    }
+    }*/
     LCD_BackLight_On();
     printf("Mesa activada, inicio de juego");
     lcd_command_8bit(LCD_CLEAR_DISPLAY);
-    lcd_puts("Mesa Activada");
+    lcd_puts("    Mesa Activada");
     lcd_command_8bit(LCD_SEGUNDA_LINEA);
     lcd_puts("Comienza juego");
     // Una vez activado el sistema se procede al bucle principal, comenzando

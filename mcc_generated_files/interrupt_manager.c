@@ -32,7 +32,7 @@ void  INTERRUPT_Initialize (void)
     RCONbits.IPEN = 1;
 
     // Assign peripheral interrupt priority vectors
-    INTCON2bits.TMR0IP = 1; // TMRI - high priority
+    //INTCON2bits.TMR0IP = 1; // TMRI - high priority
 
     // Set PORTB bits 4:7 change interrupt para las señales de:
     // Bet, Hold, CashOut, Clear

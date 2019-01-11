@@ -51,13 +51,13 @@
 void SYSTEM_Initialize(void)
 {
     INTERRUPT_Initialize();
-    PIN_MANAGER_Initialize();
-    OSCILLATOR_Initialize();
-    SPI_Initialize();
-    PWM2_Initialize();
-    TMR2_Initialize();
-    TMR0_Initialize();
-    EUSART_Initialize();
+    PIN_MANAGER_Initialize(); //
+    OSCILLATOR_Initialize(); // 
+    SPI_Initialize(); // Used for interact with raspberry pi
+    PWM2_Initialize(); // Used for generate the negative voltage for lcd contrast
+    TMR2_Initialize(); // Used for PWM
+    //TMR0_Initialize(); // Used for???
+    EUSART_Initialize(); // Use for debug
     INTCONbits.GIEH = 1;
     printf("Inicializando CD4014....\r\n");
     InitCD4014();
