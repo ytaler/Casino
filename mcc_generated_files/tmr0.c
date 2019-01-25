@@ -85,7 +85,7 @@ void TMR0_Initialize(void)
     INTCONbits.TMR0IF = 0;
 
     // Enabling TMR0 interrupt.
-    INTCONbits.TMR0IE = 1;
+    //INTCONbits.TMR0IE = 1;
 
     // Set Default Interrupt Handler
     TMR0_SetInterruptHandler(TMR0_DefaultInterruptHandler);
@@ -127,15 +127,12 @@ void TMR0_Reload(void)
 {
     //Write to the Timer0 register
     TMR0H = timer0ReloadValH;
-    TMR0L = timer0ReloadValL;
-    
+    TMR0L = timer0ReloadValL; 
 }
 
 
 void TMR0_ISR(void)
 {
-    extern uint8_t contador;
-
     // clear the TMR0 interrupt flag
     INTCONbits.TMR0IF = 0;
 
@@ -143,17 +140,13 @@ void TMR0_ISR(void)
     TMR0H = timer0ReloadValH;
     TMR0L = timer0ReloadValL;
 
+    PORTA = (PORTA & 0x80) | (~PORTA & 0x7F);
+    
     if(TMR0_InterruptHandler)
     {
         TMR0_InterruptHandler();
     }
 
-    contador <<= 1;
-    if ( (contador > 128) || (contador == 0) ){
-        contador = 1;
-    }
-    PORTD = contador;
-    //IO_RC0_Toggle();
 }
 
 
