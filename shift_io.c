@@ -19,7 +19,8 @@ void InitCD4014 (void)
 // Lee datos serie de los registros CD4014 al array global DatosCD4014[]
 void ReadCD4014 (void)
 {
-uint8_t bytes, data;
+uint8_t data;
+int8_t bytes;
 
 //#ifdef PinTestCD4014
    //output_high (PinTestCD4014); // depuracion
@@ -27,13 +28,13 @@ uint8_t bytes, data;
 
 // los pulsos son de 250ns a 16MHz
 // Primero carga TODOS los datos en paralelo en los registros
-   LOAD_CD4014_SetHigh(); // LOAD activo
-   CLK_CD4014_SetHigh(); // CLK activo, carga los datos en paralelo
    CLK_CD4014_SetLow(); // CLK inactivo
    LOAD_CD4014_SetLow(); // LOAD inactivo
+   LOAD_CD4014_SetHigh(); // LOAD activo
 
 // Ahora vamos leyendo en serie en grupos de 8 bits N veces
-   for (bytes = 0; bytes < NumeroCD4014; bytes++)
+   //for (bytes = 0; bytes < NumeroCD4014; bytes++)
+   for (bytes = (NumeroCD4014-1); bytes >= 0 ; bytes--)
    {
 // Forma larga pero rapida: 3:42us 2:29us 1:16us Aprox(3 us + 13*bytes us)
       data = 0;
@@ -63,6 +64,7 @@ uint8_t bytes, data;
       CLK_CD4014_SetLow(); // CLK inactivo
       DatosCD4014[bytes] = data; // Copiamos el dato compuesto al array
    }
+   if(DATA_CD4014_GetValue()) printf(";00;Sinc error");
 //#ifdef PinTestCD4014
    //output_low (PinTestCD4014); // depuracion
 //#endif

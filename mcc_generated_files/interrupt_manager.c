@@ -32,7 +32,7 @@ void  INTERRUPT_Initialize (void)
     RCONbits.IPEN = 1;
 
     // Assign peripheral interrupt priority vectors
-    INTCON2bits.TMR0IP = 1; // TMRI - high priority
+    INTCON2bits.TMR0IP = 0; // TMRI - low priority
 
     // Set PORTB bits 4:7 change interrupt para las señales de:
     // Bet, Hold, CashOut, Clear
@@ -41,55 +41,51 @@ void  INTERRUPT_Initialize (void)
     INTCON2bits.RBIP = 1; // RBI <4:7> - high priority
     INTCONbits.RBIE = 1; // Enabling RB Port Change interrupt.
     
-    // Set RB0 external interrupt para la señal de Pago Dealer
-    INTCONbits.INT0IF = 0; // Clear RB0 external Interrupt flag before enabling the interrupt
-    INTCON2bits.INTEDG0 = 1; // Interrupt RB0 on rising edge
-    // RB0 external interrupt is always high priority
-    INTCONbits.INT0IE = 1; // Enabling PORTB pin 0 external interrupt
-    
-    // Set RB1 external interrupt para la señal de Pago Player
-    INTCON3bits.INT1F = 0; // Clear RB1 external Interrupt flag before enabling the interrupt
-    INTCON2bits.INTEDG1 = 1; // Interrupt RB1 on rising edge
-    INTCON3bits.INT1IP = 1; // RB1 - high priorityg edge    
-    INTCON3bits.INT1E = 1; // Enabling PORTB pin 0 external interrupt
+    // Ahora se habilita para los perifericos
+    //INTCONbits.PEIE = 1; // Enable interrupts on peripheral
+    // EUSAR
+    PIR1bits.RCIF = 0; // Clear EUSAR Receive Interrupt Flag
+    //PIE1bits.RCIE = 1; // Enable EUSART Receive Interrupt
+    IPR1bits.RCIP = 1; // Set High Priority EUSART Interrupt
+    // SPI
+    PIR1bits.SSPIF = 0;
+    //PIE1bits.SSPIE = 1; // Enable SPI Interrupt
+    IPR1bits.SSPIP = 1; // Set High Priority SPI Interrupt
 }
 
 void interrupt INTERRUPT_InterruptManagerHigh (void)
 {
-   // interrupt handler
-    if(INTCONbits.TMR0IE == 1 && INTCONbits.TMR0IF == 1){
-        // TMR0 IRQ
-        TMR0_ISR();
+    if(INTCONbits.RBIE == 1 && INTCONbits.RBIF == 1){
+        // RB<4:7> pin status change IRQ
+        // Corresponde a cash out, bet, hold y clear
+        RB47_ISR();
     }
     else{
-        if(INTCONbits.RBIE == 1 && INTCONbits.RBIF == 1){
-            // RB<4:7> pin status change IRQ
-            RB47_ISR();
+        if(PIE1bits.RCIE == 1 && PIR1bits.RCIF == 1){
+            // Recepcion EUSART
+            printf("\r\n%u\r\n",RCREG);
         }
-        else
-        {
-            if(INTCONbits.INT0IE == 1 && INTCONbits.INT0IF == 1){
-                // RB0 external IRQ
-                RB0_ISR();
+        else{
+            if(PIE1bits.SSPIE == 1 && PIR1bits.SSPIF == 1){
+                // Recepcion SPI
             }
             else{
-                if(INTCON3bits.INT1E == 1 && INTCON3bits.INT1F == 1){
-                    // RB1 external IRQ
-                    RB1_ISR();
+                if(INTCONbits.TMR0IE == 1 && INTCONbits.TMR0IF == 1){
+                    // Desborde TMR0 
+                    TMR0_ISR();
                 }
-                else{
-                    //Unhandled Interrupt, no deberia pasar por aca
-                    printf("Error: unhandled interrupt\r\n");
-                }
+                else
+                    printf(";00;Error interrupcion no manejada");
             }
         }
     }
+
 }
 
 void RB47_ISR(void)
 {   
     extern bool botonPulsado_Bet, botonPulsado_Hold, botonPulsado_CashOut, botonPulsado_Clear;
-	// Clear global Interrupt-On-Change flag
+	// Clear flag
     INTCONbits.RBIF = 0;
 
     if (BotonBet) botonPulsado_Bet = true;
@@ -97,25 +93,3 @@ void RB47_ISR(void)
     if (BotonCashOut) botonPulsado_CashOut = true;    
     if (BotonClear) botonPulsado_Clear = true;  
 }
-
-void RB0_ISR(void)
-{   
-    extern bool botonPulsado_PagoDealer;
-    // cuando entra a esta subrutina sifnifica que se disparo segun la config
-    // del flanco en INTCON2bits.INTEDG0, si es 1, es ascendente por lo que 
-    // no hace falta IF, sino que se asigna la variable directamente    
-    botonPulsado_PagoDealer = true;
-}
-
-void RB1_ISR(void)
-{   
-    extern bool botonPulsado_PagoPlayer;
-    // cuando entra a esta subrutina sifnifica que se disparo segun la config
-    // del flanco en INTCON2bits.INTEDG1, si es 1, es ascendente por lo que 
-    // no hace falta IF, sino que se asigna la variable directamente    
-    botonPulsado_PagoPlayer = true;
-}
-
-/**
- End of File
-*/

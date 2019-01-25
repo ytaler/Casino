@@ -51,20 +51,21 @@
 void SYSTEM_Initialize(void)
 {
     INTERRUPT_Initialize();
-    PIN_MANAGER_Initialize();
-    OSCILLATOR_Initialize();
-    SPI_Initialize();
-    PWM2_Initialize();
-    TMR2_Initialize();
-    TMR0_Initialize();
-    EUSART_Initialize();
-    INTCONbits.GIEH = 1;
-    printf("Inicializando CD4014....\r\n");
+    PIN_MANAGER_Initialize(); //
+    OSCILLATOR_Initialize(); // 
+    SPI_Initialize(); // Used for interact with raspberry pi
+    PWM2_Initialize(); // Used for generate the negative voltage for lcd contrast
+    TMR2_Initialize(); // Used for PWM
+    TMR0_Initialize(); // Used for led blinking on royal stair
+    EUSART_Initialize(); // Use for debug
+    //printf("Inicializando CD4014....\r\n");
     InitCD4014();
-    printf("CD4014 Inicializado.\r\n");
-    printf("Inicializando LCD....\r\n");
+    //printf("CD4014 Inicializado.\r\n");
+    //printf("Inicializando LCD....\r\n");
     lcd_init();
-    printf("LCD Inicializado.\r\n");
+    //printf("LCD Inicializado.\r\n");
+    INTCONbits.GIEH = 1;
+    INTCONbits.GIEL = 1;
 }
 
 void OSCILLATOR_Initialize(void)

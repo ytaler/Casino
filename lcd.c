@@ -26,7 +26,7 @@
 #include "mcc_generated_files/mcc.h"
 
 /*--------------------------------------------------------------------------*/
-/*	Habilitar y deshabilitar señal E										*/
+/*	Enable and disable E signal (strobe)										*/
 /*--------------------------------------------------------------------------*/
 void lcd_strobe(void){
     // debe tener un minimo total de 280 ns, 140 ns cada pulso.
@@ -78,6 +78,7 @@ void lcd_putc(unsigned char c) {
 /*--------------------------------------------------------------------------*/
 void lcd_puts(const char * s) {
 	LCD_RS_SetHigh();			// Pongo en uno RS
+	LCD_RW_SetLow();			// Pongo en cero RW
 	while (*s)
         lcd_write(*s++);
 }
@@ -86,19 +87,29 @@ void lcd_puts(const char * s) {
 /*--------------------------------------------------------------------------*/
 void lcd_init(void) {
     LCD_RW_SetLow();
-	__delay_ms(16);			// Debo esperar un tiempo mayor a 15ms por
-                            // estabilizacion de fuente y otros menesteres
+	__delay_ms(16); // Must wait at least 15ms because power supply stabilization and other things.
     LCD_PORT = ((LCD_PORT & 0xF0) | (0x03)); // Le escribo el valor 0011 --> Datos primer envio
-	lcd_strobe();			// Habilito y deshabilito la señal enable --> Primer envio
-	__delay_ms(5);			// Debo esperar un tiempo superior a 4.1 ms
-	lcd_strobe();			// Habilito y deshabilito la señal enable --> Segundo envio. Datos iguales
-	__delay_us(200);			// Debo esperar un tiempo superior a 100 us
-	lcd_strobe();			// Habilito y deshabilito la señal enable --> Tercer envio. Datos iguales
+	lcd_strobe(); // Do strobe with "E" signal
+	__delay_ms(5); // Debo esperar un tiempo superior a 4.1 ms
+	lcd_strobe(); // Do strobe with "E" signal
+	__delay_us(200); // Debo esperar un tiempo superior a 100 us
+	lcd_strobe(); // Do strobe with "E" signal
     LCD_PORT = ((LCD_PORT & 0xF0) | (0x02)); // Le escribo el valor 0010
-	lcd_strobe();									// Habilito y deshabilito la señal E
-	lcd_write(LCD_INTERFACE_4|LCD_2_LINE|LCD_5x8);	// Function set: le escribo el valor 0010 1000 (4-bits, 2 lineas, 5x8) --> 0x28
-	lcd_write(LCD_DISPLAY_ON);						// Display on/off: le escribo el valor 0000 1000 (display on, cursor y blink off) --> 0x0C
-	lcd_write(LCD_CLEAR_DISPLAY); 					// Le escribo el valor 0000 0001 (Display clear) --> 0x01
-	__delay_us(LCD_ETIME_1);							// Espero un tiempo de 1500 us que es lo que demora un clear display
-	lcd_write(LCD_CURSOR_RIGHT);					// Muevo una posicion a la derecha el cursor 0000 0110 --> 0x06
+	lcd_strobe(); // Do strobe with "E" signal
+	lcd_write(LCD_INTERFACE_4|LCD_2_LINE|LCD_5x8); // Function set: le escribo el valor 0010 1000 (4-bits, 2 lineas, 5x8) --> 0x28
+	lcd_write(LCD_DISPLAY_ON); // Display on/off: le escribo el valor 0000 1000 (display on, cursor y blink off) --> 0x0C
+	lcd_write(LCD_CLEAR_DISPLAY); // Le escribo el valor 0000 0001 (Display clear) --> 0x01
+	__delay_us(LCD_ETIME_1); // Espero un tiempo de 1500 us que es lo que demora un clear display
+	lcd_write(LCD_CURSOR_RIGHT); // Muevo una posicion a la derecha el cursor 0000 0110 --> 0x06
+}
+
+/*--------------------------------------------------------------------------*/
+/*	Escribes las dos lineas en una sola llamada                             */
+/*--------------------------------------------------------------------------*/
+void lcd_write2lines(const char * l1, const char * l2){
+    lcd_command_8bit(LCD_CLEAR_DISPLAY);
+    lcd_command_8bit(LCD_RETURN_HOME);
+    lcd_puts(l1);
+    lcd_command_8bit(LCD_SEGUNDA_LINEA);
+    lcd_puts(l2);   
 }

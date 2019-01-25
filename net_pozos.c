@@ -5,23 +5,22 @@ uint8_t verificarBotonesPlayer(uint8_t datos){
     // Con este codigo se permite un solo boton pulsado a la vez
     // cuando hay dos botones se devuelve cero
     //datos = 0x03;
-    uint8_t contador = 0, temp;
     // se limpia la parte MSB
     datos &= 0x0F;
-    temp = datos;
-    // se testean 4 bits, comenzando por el bit 0
-    contador += (uint8_t)(temp & 0x01);
-    // se rota y se continua con bit 1
-    temp >>= 1;    
-    contador += (uint8_t)(temp & 0x01);
-    // se rota y se continua con bit 2
-    temp >>= 1;    
-    contador += (uint8_t)(temp & 0x01);
-    // se rota y se continua con bit 3
-    temp >>= 1;    
-    contador += (uint8_t)(temp & 0x01);        
-    if (contador > 1)
-        datos = 0x00;
+    switch(datos){
+        case 0x01:
+        case 0x02:
+            break;
+        case 0x04:
+            datos = 0x03;
+            break;
+        case 0x08:
+            datos = 0x04;
+            break;
+        default:
+            datos = 0x00;
+            break;
+    }
     return datos;
 }
 
