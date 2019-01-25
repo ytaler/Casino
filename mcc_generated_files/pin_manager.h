@@ -60,7 +60,7 @@
 #define PULL_UP_DISABLED     0
 
 #define GAME_Clear_Players()        do { PORTA = (uint8_t)(PORTA & 0x80); } while (0)
-#define GAME_Set_Player()           do { PORTA = (uint8_t) ((uint8_t)(PORTA & 0x80) | (uint8_t)( 0x01 << playerAPagar)); } while (0)
+#define GAME_Set_Player()           do { PORTA = (uint8_t) ((uint8_t)(PORTA & 0x80) | (uint8_t)( 0x01 << (playerAPagar-1))); } while (0)
 #define GAME_Set_Players()           do { PORTA = (uint8_t) ((uint8_t)(PORTA & 0x80) | (uint8_t) tablaLedPlayers ); } while (0)
 
 // ****************************************************************************
@@ -171,8 +171,8 @@
 #define IO_RA7_SetDigitalOutput()   do { TRISAbits.TRISA7 = 0; } while(0)
 // Porta Bit7 = Salida Led Bet (verde) / Hold (rojo)
 #define GAME_Status                 PORTAbits.RA7 // Alias del pin
-#define GAME_Status_SetBet()        IO_RA7_SetHigh()
-#define GAME_Status_SetHold()       IO_RA7_SetLow()
+#define GAME_Status_SetBet()        IO_RA7_SetLow()
+#define GAME_Status_SetHold()       IO_RA7_SetHigh()
 #define GAME_Status_Toggle()        IO_RA7_Toggle()
 
 // get/set IO_RB0 aliases
