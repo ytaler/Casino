@@ -55,6 +55,8 @@
 #define		LCD_ETIME_1	1520	// Tiempo que demora la ejecucion de un Clear Display y Return Home [us]
 #define		LCD_ETIME_2	40		// Tiempo que demoran el resto de las intrucciones [us]
 
+char line[2][40]; // Max 40 chars por linea 
+
 // Inicializa el LCD - (Llamar al principio)
 void lcd_init(void);
 // Escribe un byte en el LCD en modo de 4bits
@@ -67,5 +69,7 @@ void lcd_putc(unsigned char);
 void lcd_puts(const char * s);
 // Habilita y deshabilita la señal de enable
 void lcd_strobe(void);
+// Escribe dos lineas en una sola llamada
+void lcd_write2lines(const char * l1, const char * l2);
 
 #endif /* _LCD_H_ */
