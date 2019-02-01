@@ -73,7 +73,7 @@ uint8_t verificarTecladoNumerico(uint8_t datos1, uint8_t *datos2);
 
 #define PREMIO_MAX UINT32_MAX/10
 
-const char tablaApuestaPlayer[][5] = {{'_','P','P','D','D'},{'_','+','-','+','-'}}; // compensa diferencia de indices con un guion bajo
+const char tablaApuestaPlayer[][5] = {{'_','D','D','P','P'},{'_','+','-','+','-'}}; // compensa diferencia de indices con un guion bajo
 
 const char premios[][16] = {
     {' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '},
