@@ -46,28 +46,8 @@ void main(void)
     // la inicializacion debe hacerlo de tal forma de dejar todos los disp
     // listos pero apagados o en stand by
     SYSTEM_Initialize();
-    // funciones de comunicacion:
-    // 1) printf --> escritura en uart
-    // 2) lcd_puts --> escritura en lcd
-    // 3) SPI_Exchange8bit y SPI_Exchange8bitBuffer --> escritura SPI
-    LCD_BackLight_Off();
-    //printf("Inicio de sistema NetPozos\r\nEsperando activacion de mesa\r\n");
-    lcd_write2lines("Sistema NetPozos","Mesa Desactivada");
-    sprintf(mensajeSpi,";02");
-    printf(mensajeSpi);
-    SPI_Exchange8bitBuffer(mensajeSpi,sizeof(mensajeSpi),NULL);
-    /*
-    // ToDo: respuesta SPI por IRQ o respuesta directa de mnesaje .. VER!!!
-     *     while(respuestaSpi == 'I'){
-        // chequeo si la mesa esta activa cada 5 segundos
-        //sprintf(mensajeSpi,"02;"); // ya fue escrito anteriormente asi que no es necesario, se reusa
-        SPI_Exchange8bitBuffer(mensajeSpi,sizeof(mensajeSpi),NULL);
-        //printf("02;%c\r\n", respuestaSpi);
-        __delay_ms(5000);
-    }
-    */
-    LCD_BackLight_On();
-    //printf("Mesa activada, inicio de juego\r\n");
+    lcd_write2lines("Sistema NetPozos","v1.0.0");
+    __delay_ms(2000);
     // Una vez activado el sistema se procede al bucle principal, comenzando
     // por el estado bet (01;B)
     sprintf(mensajeSpi,";01;B");
@@ -113,11 +93,13 @@ void main(void)
             // Una vez leidas todas las variables se procede a la toma de decisiones.
             // 1) Primero se calcula el monto de la apuesta (si es que cambio / hay)
             if(keypad>0){
-                monto *= 10;
-                monto += (uint32_t) (keypad-1);
-                // ToDo: Mostrar puntos decimales
-                sprintf(line[1],"$ %lu",monto);
-                lcd_write2lines("Ingrese monto:",line[1]);
+                if(monto < PREMIO_MAX){
+                    monto *= 10;
+                    monto += (uint32_t) (keypad-1);
+                    // ToDo: Mostrar puntos decimales
+                    sprintf(line[1],"$ %lu",monto);
+                    lcd_write2lines("Ingrese monto:",line[1]);
+                }
             }
             // 2) Cargar monto en un player o marcar para realizar pago
             if(dealerSelectPlayer>0){
@@ -131,13 +113,12 @@ void main(void)
                     // significa que se habia ingresado un monto y esta listo
                     // para comprar creditos se debe enviar mensaje:
                     // 03;NroPlayer;Monto
-                    // ToDo: Rotar display si es mas largo de 16 caracteres la 2da linea
                     sprintf(mensajeSpi,";03;%u;%lu",dealerSelectPlayer,monto);
                     printf(mensajeSpi);
                     SPI_Exchange8bitBuffer(mensajeSpi,sizeof(mensajeSpi),NULL);
                     // Escribimos info en LCD
                     sprintf(line[0],"Player %u",dealerSelectPlayer);
-                    sprintf(line[1], "Monto $%lu", monto);
+                    sprintf(line[1], "$ %lu", monto);
                     lcd_write2lines(line[0],line[1]);
                     monto = 0x00;
                     timeoutMensaje = 44; // Equivale aprox 10 segundos con delay de 225 ms
@@ -150,11 +131,11 @@ void main(void)
                     SPI_Exchange8bitBuffer(mensajeSpi,sizeof(mensajeSpi),NULL);
                     // esta tabla almacena las apuestas de player a player para luego mostrarlos
                     // solamente cuando es apuesta a Player (player[i]) < 3
-                    // 1 --> P -
-                    // 2 --> P +
-                    // 3 --> D -
-                    // 4 --> D +
-                    if(player[i] < 3)
+                    // 1 --> D -
+                    // 2 --> D +
+                    // 3 --> P -
+                    // 4 --> P +
+                    if(player[i] > 2)
                         tablaLedPlayers |= (uint8_t) (0x01 << i);
                 }
             }         
@@ -168,7 +149,7 @@ void main(void)
                     SPI_Exchange8bitBuffer(mensajeSpi,sizeof(mensajeSpi),NULL);
                     // Escribimos info en LCD
                     sprintf(line[0],"CashOut Player %u",playerAPagar);
-                    sprintf(line[1], "Monto $%lu", monto);
+                    sprintf(line[1], "$ %lu", monto);
                     lcd_write2lines(line[0],line[1]);
                     playerAPagar = 0x00; // Elimina valor variable       
                     timeoutMensaje = 266; // Equivale aprox 60 segundos con delay de 225 ms
@@ -233,6 +214,7 @@ void main(void)
             }
             if( (dealerPagaDealer > 0) && (botonPagoDealer) ){
                 // se deben pulsar las dos teclas simultaneamente por seguridad
+                playerAPagar = 0x00;
                 sprintf(mensajeSpi,";06;0;%u",dealerPagaDealer);
                 printf(mensajeSpi);
                 SPI_Exchange8bitBuffer(mensajeSpi,sizeof(mensajeSpi),NULL);
