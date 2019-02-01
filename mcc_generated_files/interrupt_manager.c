@@ -42,10 +42,10 @@ void  INTERRUPT_Initialize (void)
     INTCONbits.RBIE = 1; // Enabling RB Port Change interrupt.
     
     // Ahora se habilita para los perifericos
-    //INTCONbits.PEIE = 1; // Enable interrupts on peripheral
-    // EUSAR
-    PIR1bits.RCIF = 0; // Clear EUSAR Receive Interrupt Flag
-    //PIE1bits.RCIE = 1; // Enable EUSART Receive Interrupt
+    INTCONbits.PEIE = 1; // Enable interrupts on peripheral
+    // EUSART
+    PIR1bits.RCIF = 0; // Clear EUSART Receive Interrupt Flag
+    PIE1bits.RCIE = 1; // Enable EUSART Receive Interrupt
     IPR1bits.RCIP = 1; // Set High Priority EUSART Interrupt
     // SPI
     PIR1bits.SSPIF = 0;
