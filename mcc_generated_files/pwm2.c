@@ -63,7 +63,8 @@
 
 void PWM2_Initialize(void)
 {
-    // Set the PWM2 to the options selected in the User Interface
+    // disable capture / compare / pwm module
+    CCP1CON = 0x00;
 	
 	// CCP2M PWM; DC2B 3; 
 	CCP2CON = 0x3C; // 0011 1100
