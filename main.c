@@ -54,7 +54,7 @@ void main(void)
     sprintf(mensajeSpi,";01;B");
     printf(mensajeSpi);
     SPI_Exchange8bitBuffer(mensajeSpi,sizeof(mensajeSpi),NULL);
-    lcd_write2lines("Mesa Activada!","Comienza juego");
+    lcd_write2lines(" Mesa Activada! "," Comienza juego ");
     GAME_Status_SetBet(); // Enciende led verde indicando estado Bet
     while(1) // bucle principal del juego
     {        
@@ -67,7 +67,7 @@ void main(void)
         oldDealerSelectPlayer = oldDealerPagaDealer = oldDealerPagaPlayer = oldKeypad = oldPlayerAPagar = repeticion = 0x00;
         oldPlayer[0] = oldPlayer[1] = oldPlayer[2] = oldPlayer[3] = oldPlayer[4] = oldPlayer[5] = oldPlayer[6] = 0x00;
         GAME_Clear_Players(); // Apaga todos los leds indicadores de los players        
-        lcd_write2lines("Esperando","apuestas");
+        lcd_write2lines("    Esperando   ","    apuestas    ");
         while(!GAME_Status){
             // En estado Bet hay 4 posibilidades:
             // 1) Los botones del teclado numero por el monto de la apuesta y el player
@@ -177,7 +177,7 @@ void main(void)
                 monto = 0x00;
                 playerAPagar = 0x00;
                 GAME_Clear_Players(); // Apaga todos los leds indicadores de los players
-                lcd_write2lines("Esperando","apuestas");
+                lcd_write2lines("    Esperando   ","    apuestas    ");
                 timeoutMensaje = 0x00;
             }
             if(botonPulsado_Hold){
@@ -197,7 +197,7 @@ void main(void)
                 if(timeoutMensaje == 0x00){
                     GAME_Clear_Players(); // Apaga todos los leds indicadores de los players
                     // limpia pantalla cuando expiro el timeoutMensaje
-                    lcd_write2lines("Esperando","apuestas");
+                    lcd_write2lines("    Esperando   ","    apuestas    ");
                 }
             }
         }
@@ -208,7 +208,7 @@ void main(void)
         oldDealerSelectPlayer = oldDealerPagaDealer = oldDealerPagaPlayer = oldKeypad = oldPlayerAPagar = repeticion = 0x00;
         player[0]=player[1]=player[2]=player[3]=player[4]=player[5]=player[6]=0x00;
         playerAPagar = 0x00;
-        lcd_write2lines("Juego en curso","");
+        lcd_write2lines(" Juego en curso "," * * H O L D * *");
         while(GAME_Status){
             // En estado Hold hay X posibilidades:
             // x) El boton de Bet
@@ -296,11 +296,11 @@ void main(void)
                     sprintf(mensajeSpi,";07");
                     printf(mensajeSpi);
                     SPI_Exchange8bitBuffer(mensajeSpi,sizeof(mensajeSpi),NULL);
-                    lcd_write2lines("Cancelando","todos los pagos");
+                    lcd_write2lines("   Cancelando   ","todos los pagos");
                     timeoutMensaje = 10000/delayVueltaMs; // = 80 --> Equivale aprox 10 segundos con delay de 125 ms
                 }
                 else{
-                    lcd_write2lines("Juego en curso","");
+                    lcd_write2lines(" Juego en curso "," * * H O L D * *");
                     timeoutMensaje = 0x00;
                 }
                 GAME_Set_Players();
@@ -323,7 +323,7 @@ void main(void)
                     INTCONbits.TMR0IE = 0; // Deshabilita blink por TMR0
                     escaleraReal = false;
                     // limpia pantalla cuando expiro el timeoutMensaje
-                    lcd_write2lines("Juego en curso","");
+                    lcd_write2lines(" Juego en curso "," * * H O L D * *");
                     GAME_Set_Players();
                 }
             }            
