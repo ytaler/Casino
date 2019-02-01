@@ -466,21 +466,6 @@
 #define	LCD_RW_SetHigh()            IO_RD6_SetHigh()
 #define	LCD_RW_SetLow()             IO_RD6_SetLow()
 
-// get/set IO_RD7 aliases
-#define IO_RD7_TRIS                 TRISDbits.TRISD7
-#define IO_RD7_LAT                  LATDbits.LATD7
-#define IO_RD7_PORT                 PORTDbits.RD7
-#define IO_RD7_SetHigh()            do { LATDbits.LATD7 = 1; } while(0)
-#define IO_RD7_SetLow()             do { LATDbits.LATD7 = 0; } while(0)
-#define IO_RD7_Toggle()             do { LATDbits.LATD7 = ~LATDbits.LATD7; } while(0)
-#define IO_RD7_GetValue()           PORTDbits.RD7
-#define IO_RD7_SetDigitalInput()    do { TRISDbits.TRISD7 = 1; } while(0)
-#define IO_RD7_SetDigitalOutput()   do { TRISDbits.TRISD7 = 0; } while(0)
-// PortD Bit67 = Salida para control de backligth LCD. Dependiento del 
-// transistor usado (NPN o PNP) se debe ajustar los alias de abajo
-#define	LCD_BackLight_On()          IO_RD7_SetHigh()
-#define	LCD_BackLight_Off()         IO_RD7_SetLow()
-
 // ****************************************************************************
 // ********************               PORT E               ********************
 // ****************************************************************************
