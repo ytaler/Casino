@@ -131,6 +131,7 @@ void main(void)
                     sprintf(line[1], "$ %lu", monto);
                     lcd_write2lines(line[0],line[1]);
                     monto = 0x00;
+                    playerAPagar = 0x00;
                     timeoutMensaje = 10000/delayVueltaMs; // = 80 --> Equivale aprox 10 segundos con delay de 125 ms
                 }
             }
