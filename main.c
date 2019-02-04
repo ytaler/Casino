@@ -201,6 +201,11 @@ void main(void)
                         for(i = 0; i < 14; i++){
                             respuestaRaspBerryPi[i] = respuestaRaspBerryPi[i+4];                               
                         }
+                        // Asigna cero en caso de no haber recibido nada
+                        if(!isdigit(respuestaRaspBerryPi[0])){
+                            respuestaRaspBerryPi[0] = '0';
+                            respuestaRaspBerryPi[1] = 0x00;
+                        }
                         // Escribimos info en LCD
                         sprintf(line[0],"CashOut Player %u",playerAPagar);
                         //sprintf(line[1], "$ %lu", monto);
