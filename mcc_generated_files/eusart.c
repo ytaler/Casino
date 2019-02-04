@@ -98,10 +98,9 @@ void EUSART_Initialize(void) {
     TXSTA = 0b00100110;
 
     // Estos valores dependen del clock del micro!! REVISAR!! Pagina 252
-    // Para SYNC=0, BGRH=1 y BGR16=1 a 4 MHz el valor para 9600 baudios con un error de 0,16 es 103=0x067
+    // Para SYNC=0, BGRH=1 y BGR16=1 a 4 MHz el valor para 115200 baudios con un error de 0,16 es 103=0x067
     // Esta configuración se conoce como 8N1. Para utilizar con minicom desactivar control de flujo por hardware.
     SPBRGH=0x00;
-    //SPBRG=0x67;    
     SPBRG=34; // para 16 mhz
     //SPBRG=103; // para 4 mhz
     //SPBRG=138; // para 64 mhz
@@ -129,7 +128,6 @@ uint8_t EUSART_Read(void) {
 
     if (1 == RCSTAbits.OERR) {
         // EUSART error - restart
-
         RCSTAbits.CREN = 0;
         RCSTAbits.CREN = 1;
     }
