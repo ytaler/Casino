@@ -141,7 +141,7 @@ void TMR0_ISR(void)
     TMR0H = timer0ReloadValH;
     TMR0L = timer0ReloadValL;
 
-    PORTA = (PORTA & 0x80) | (~PORTA & 0x7F);
+    PORTA = (uint8_t) (PORTA & 0x80) | (~PORTA & 0x7F);
     
     if(TMR0_InterruptHandler)
     {
