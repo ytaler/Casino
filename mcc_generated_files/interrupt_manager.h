@@ -25,7 +25,7 @@
 
 #ifndef INTERRUPT_MANAGER_H
 #define INTERRUPT_MANAGER_H
-
+#include <stdint.h>        /* For uint8_t definition */
 /**
  * @Param
     none
@@ -119,10 +119,9 @@ void INTERRUPT_Initialize (void);
     INTERRUPT_InterruptManager();
  */
 void interrupt INTERRUPT_InterruptManager (void);
+void filtroCaracteres(uint8_t *);
 
 void RB47_ISR(void);
-void RB0_ISR(void);
-void RB1_ISR(void);
 
 #endif  // INTERRUPT_MANAGER_H
 /**
