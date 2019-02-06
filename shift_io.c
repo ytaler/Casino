@@ -62,7 +62,7 @@ int8_t bytes;
       if (DATA_CD4014_GetValue()) data|=0x01;
       CLK_CD4014_SetHigh(); // CLK activo, desplaza
       CLK_CD4014_SetLow(); // CLK inactivo
-      DatosCD4014[bytes] = data; // Copiamos el dato compuesto al array
+      DatosCD4014[(uint8_t) bytes] = data; // Copiamos el dato compuesto al array
    }
    if(DATA_CD4014_GetValue()) printf("|00;Sinc error");
 //#ifdef PinTestCD4014
