@@ -55,7 +55,7 @@ void  INTERRUPT_Initialize (void)
 
 void interrupt INTERRUPT_InterruptManagerHigh (void)
 {
-    uint8_t uartTemp;
+    uint8_t uartTemp, uartTempAntes;
     extern bool finTransmision;
     extern uint8_t indiceRespuesta;
     extern char respuestaRaspBerryPi[18];
@@ -82,31 +82,15 @@ void interrupt INTERRUPT_InterruptManagerHigh (void)
                 // por lo que verificamos que sea asi
                 //uartTemp = (uint8_t) toupper((char) uartTemp);
                 if( (indiceRespuesta > 0) && (indiceRespuesta < 18) ){
-                    switch(uartTemp){
-                        // verificamos ademas que sea un numero o las letras a/A e i/I y ;  (mensaje 01 y 04)
-                        case '0':
-                        case '1':                           
-                        case '2':
-                        case '3':
-                        case '4':
-                        case '5':                            
-                        case '6':
-                        case '7':                           
-                        case '8':
-                        case '9':
-                        case ';':
-                        case 'A':
-                        case 'I':
-                        case 'a':                           
-                        case 'i':
-                            respuestaRaspBerryPi[indiceRespuesta] = uartTemp;
-                            indiceRespuesta++;
-                            break;
-                        default:
-                            // sino fin de mensaje
-                            respuestaRaspBerryPi[indiceRespuesta] = 0x00;
-                            indiceRespuesta = 0x00;
-                            finTransmision = true;                            
+                    uartTempAntes = uartTemp;
+                    filtroCaracteres(&uartTemp);
+                    respuestaRaspBerryPi[indiceRespuesta] = uartTemp;
+                    if(uartTemp == uartTempAntes)
+                        indiceRespuesta++;
+                    else{
+                        // sino fin de mensaje
+                        indiceRespuesta = 0x00;
+                        finTransmision = true;
                     }
                 }
                 else{
@@ -146,4 +130,33 @@ void RB47_ISR(void)
     if (BotonHold) botonPulsado_Hold = true;    
     if (BotonCashOut) botonPulsado_CashOut = true;    
     if (BotonClear) botonPulsado_Clear = true;  
+}
+
+void filtroCaracteres(uint8_t *caracter){
+    // verificamos que no se sea un valor menor a 48 (numero cero en ascii)
+    if(*caracter < 48)
+        *caracter = 0x00;
+    else{
+        // sino verificamos que no sea un numero mayor a 102 (letra f ascii)
+        if(*caracter > 102){
+            // la excepcion es letra i
+            if(*caracter != 105)
+                *caracter = 0x00;
+        }
+        else{
+            // luego sigue la franja despues de 9 y antes de A
+            if( (*caracter > 57) && (*caracter < 65) ){
+                if(*caracter != 59)
+                    *caracter = 0x00;
+            }
+            else{
+                // luego sigue franja despues de F y antes de a
+                if( (*caracter > 70) && (*caracter < 97) ){
+                    // caso especial mantener I
+                    if(*caracter != 73)
+                        *caracter = 0x00;
+                }
+            }
+        }
+    }
 }
