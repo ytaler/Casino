@@ -53,7 +53,7 @@ void SYSTEM_Initialize(void)
     INTERRUPT_Initialize();
     PIN_MANAGER_Initialize(); //
     OSCILLATOR_Initialize(); // 
-    SPI_Initialize(); // Used for interact with raspberry pi
+    //SPI_Initialize(); // Used for interact with raspberry pi
     PWM2_Initialize(); // Used for generate the negative voltage for lcd contrast
     TMR2_Initialize(); // Used for PWM
     TMR0_Initialize(); // Used for led blinking on royal stair
