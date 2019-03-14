@@ -28,16 +28,21 @@
 /******************************************************************************/
 
 int ciclos = 0;
+// Variables utilizadas para el juego en si
 uint8_t player[7], dealerSelectPlayer, dealerPagaDealer, dealerPagaPlayer, keypad, playerAPagar;
-uint8_t oldPlayer[7], oldDealerSelectPlayer, oldDealerPagaDealer, oldDealerPagaPlayer, oldKeypad, oldPlayerAPagar;
-uint8_t tablaLedPlayers, tablaLedPlayersBackUp, i, repeticion, repeticionPlayer[7], indiceRespuesta, contador, diferenciaAscii;
-const uint8_t antirrebote = 3, delayVueltaMs = 125;
-//uint8_t respuestaSpi;
+uint8_t oldPlayer[7], oldDealerSelectPlayer, oldPlayerAPagar;
+uint8_t tablaLedPlayers, tablaLedPlayersBackUp;
+uint32_t monto=0;
+bool botonPulsado_Bet = false, botonPulsado_Hold = false, botonPulsado_CashOut = false, botonPulsado_Clear = false;
+bool mesaActiva = false, apuestasPlayer = false, escaleraReal = false;
+bool keypadLiberado = true, pagoPlayerLiberado = true, pagoDealerLiberado = true;
+// Variables utilizadas para control de progama
+const uint8_t delayVueltaMs = 125;
+uint8_t i, repeticion, indiceRespuesta, contador, diferenciaAscii;
 uint16_t timeoutMensaje;
-uint32_t monto=0; // usado para guardar el monto
-bool botonPulsado_Bet = false, botonPulsado_Hold = false, botonPulsado_CashOut = false, botonPulsado_Clear = false, escaleraReal = false, finTransmision = false, mesaActiva = false, apuestasPlayer = false;
-bool tablaPlayers[8]; // tiene un valor de mas por correcion de indices
-char mensajeSpi[20], respuestaRaspBerryPi[18];
+bool finTransmision = false;
+//char mensajeSpi[20];
+char respuestaRaspBerryPi[18];
 
 void clearBuffer(void);
 /******************************************************************************/
@@ -80,7 +85,6 @@ void main(void)
     lcd_write2lines("\xA5Mesa  Activada!"," Comienza juego ");
     __delay_ms(2000);
     GAME_Status_SetBet(); // Enciende led verde indicando estado Bet
-    tablaPlayers[0] = tablaPlayers[1] = tablaPlayers[2] = tablaPlayers[3] = tablaPlayers[4] = tablaPlayers[5] = tablaPlayers[6] = tablaPlayers[7] = true; // habilitamos toods los players
     while(1) // bucle principal del juego
     {        
         /***********************************************************************
@@ -91,15 +95,9 @@ void main(void)
         monto = 0x00;
         playerAPagar = 0x00;
         tablaLedPlayers = 0x00;
-        /*
-        for(i=0; i<8; i++){
-            if(tablaPlayers[i]){
-                tablaLedPlayers = (uint8_t) ( tablaLedPlayers | (uint8_t)( 0x01 << i) );
-            }
-        }
-        */
         botonPulsado_Clear = botonPulsado_CashOut = botonPulsado_Bet = botonPulsado_Hold = false;
-        oldDealerSelectPlayer = oldDealerPagaDealer = oldDealerPagaPlayer = oldKeypad = oldPlayerAPagar = repeticion = 0x00;
+        keypadLiberado = true;
+        oldDealerSelectPlayer = oldPlayerAPagar = repeticion = 0x00;
         oldPlayer[0] = oldPlayer[1] = oldPlayer[2] = oldPlayer[3] = oldPlayer[4] = oldPlayer[5] = oldPlayer[6] = 0x00;
         GAME_Clear_Players(); // Apaga todos los leds indicadores de los players        
         lcd_write2lines("Esperando","apuestas");
@@ -131,19 +129,20 @@ void main(void)
             // Una vez leidas todas las variables se procede a la toma de decisiones.
             // 1) Primero se calcula el monto de la apuesta (si es que cambio / hay)
             if(keypad>0){
-                if( (keypad != oldKeypad) || (repeticion > antirrebote) ){
-                    oldKeypad = keypad;
+                if(keypadLiberado){
+                    keypadLiberado = false;
                     repeticion = 0x00;
                     if(monto < PREMIO_MAX){
                         monto *= 10;
                         monto += (uint32_t) (keypad-1);
                         sprintf(line[1],"$ %lu",monto);
                         lcd_write2lines("Ingrese monto:",line[1]);
-                    }                    
+                    }
                 }
-                else{
-                    repeticion++;
-                }
+            }
+            else{
+                // botones liberados
+                keypadLiberado = true;
             }
             // 2) Cargar monto en un player o marcar para realizar pago
             if(dealerSelectPlayer>0){
@@ -151,37 +150,29 @@ void main(void)
                 playerAPagar = dealerSelectPlayer;
                 // Enciende el player seleccionado para pagar
                 GAME_Set_Player();
-                // una vez seleccionado el player verificamos si esta habilitado                
-                if(tablaPlayers[dealerSelectPlayer]){
-                    // Hay dos posibilidades: realizar apuesta o marcar player
-                    // para luego realizar cash out.
-                    if(monto > 0){
-                        // significa que se habia ingresado un monto y esta listo
-                        // para comprar creditos se debe enviar mensaje:
-                        // 03;NroPlayer;Monto
-                        //sprintf(mensajeSpi,"|03;%u;%lu#\r\n",dealerSelectPlayer,monto);
-                        //printf(mensajeSpi);
-                        //SPI_Exchange8bitBuffer(mensajeSpi,sizeof(mensajeSpi),NULL);
-                        printf("|03;%u;%lu#\r\n",dealerSelectPlayer,monto);
-                        // Escribimos info en LCD
-                        sprintf(line[0],"Monto player %u",dealerSelectPlayer);
-                        sprintf(line[1], "$ %lu", monto);
-                        lcd_write2lines(line[0],line[1]);
-                        monto = 0x00;
-                        playerAPagar = 0x00;
-                        timeoutMensaje = 10000/delayVueltaMs; // = 80 --> Equivale aprox 10 segundos con delay de 125 ms
-                    }
-                }
-                else{
+                // Hay dos posibilidades: realizar apuesta o marcar player
+                // para luego realizar cash out.
+                if(monto > 0){
+                    // significa que se habia ingresado un monto y esta listo
+                    // para comprar creditos se debe enviar mensaje:
+                    // 03;NroPlayer;Monto
+                    //sprintf(mensajeSpi,"|03;%u;%lu#\r\n",dealerSelectPlayer,monto);
+                    //printf(mensajeSpi);
+                    //SPI_Exchange8bitBuffer(mensajeSpi,sizeof(mensajeSpi),NULL);
+                    printf("|03;%u;%lu#\r\n",dealerSelectPlayer,monto);
+                    // Escribimos info en LCD
+                    sprintf(line[0],"Monto player %u",dealerSelectPlayer);
+                    sprintf(line[1], "$ %lu", monto);
+                    lcd_write2lines(line[0],line[1]);
+                    monto = 0x00;
                     playerAPagar = 0x00;
-                    timeoutMensaje = 1000/delayVueltaMs; // = 80 --> Equivale aprox 10 segundos con delay de 125 ms
+                    timeoutMensaje = 10000/delayVueltaMs; // = 80 --> Equivale aprox 10 segundos con delay de 125 ms
                 }
             }
             for(i = 0; i < 7; i++){
-                if( (player[i] > 0) && (tablaPlayers[i+1]) ){
-                    if( (player[i] != oldPlayer[i]) || (repeticionPlayer[i] > antirrebote) ){
-                        oldPlayer[i] = player[i];
-                        repeticionPlayer[i] = 0x00;
+                if (player[i] != oldPlayer[i]){
+                    oldPlayer[i] = player[i];
+                    if(player[i] > 0){
                         //sprintf(mensajeSpi,"|05;%u;%c;%c#\r\n", i+1, tablaApuestaPlayer[0][player[i]], tablaApuestaPlayer[1][player[i]]);
                         //printf(mensajeSpi);
                         //SPI_Exchange8bitBuffer(mensajeSpi,sizeof(mensajeSpi),NULL);
@@ -195,9 +186,6 @@ void main(void)
                         //if(player[i] > 2)
                             //tablaLedPlayers |= (uint8_t) (0x01 << i);
                     }
-                    else{
-                        repeticionPlayer[i]++;
-                    }
                 }
             }         
             if(botonPulsado_CashOut){
@@ -210,7 +198,7 @@ void main(void)
                     //sprintf(mensajeSpi,"|04;%u\r\n",playerAPagar);
                     //printf(mensajeSpi);
                     //SPI_Exchange8bitBuffer(mensajeSpi,sizeof(mensajeSpi),NULL);
-                    printf(mensajeSpi,"|04;%u#\r\n",playerAPagar);
+                    printf("|04;%u#\r\n",playerAPagar);
                     sprintf(line[1],"Out Player %u", playerAPagar);
                     lcd_write2lines("Solicitando Cash",line[1]);
                     while(!finTransmision){
@@ -225,6 +213,18 @@ void main(void)
                             timeoutMensaje = 20000/delayVueltaMs; // = 160 --> Equivale aprox 20 segundos con delay de 125 ms
                             break;
                         }
+                        else{
+                            switch(contador){
+                                case 50:
+                                case 100:
+                                case 150:
+                                    // reintentos cada 2,5 segundos
+                                    printf("|04;%u#\r\n",playerAPagar);
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }                        
                     }
                     // verificamos si no hubo timeout y la respuesta de la raspberry
                     if(contador < 200){
@@ -273,51 +273,6 @@ void main(void)
                 GAME_Status_SetHold(); // Enciende led rojo indicando estado Hold
                 timeoutMensaje = 0x00;
             }
-            /*
-            if(botonPagoDealer && botonPagoPlayer){
-                if(repeticion > antirrebote){
-                    timeoutMensaje = 10000/delayVueltaMs; // = 80 --> Equivale aprox 10 segundos con delay de 125 ms
-                    if(dealerSelectPlayer > 0){
-                        // Seccion para deshabilitar players
-                        repeticion = 0x00;
-                        tablaPlayers[dealerSelectPlayer] = !tablaPlayers[dealerSelectPlayer];
-                        sprintf(line[0],"Player %u",dealerSelectPlayer);
-                        if(tablaPlayers[dealerSelectPlayer]){
-                            sprintf(line[1],"Activado", respuestaRaspBerryPi);
-                            tablaLedPlayers = (uint8_t) ( tablaLedPlayers | (uint8_t)( 0x01 << (dealerSelectPlayer-1)) );
-                        }
-                        else{
-                            sprintf(line[1],"Desactivado", respuestaRaspBerryPi);
-                            tablaLedPlayers = (uint8_t) ( tablaLedPlayers & (uint8_t) ~( (uint8_t)( 0x01 << (dealerSelectPlayer-1)) ) );
-                        }
-                        lcd_write2lines(line[0],line[1]);
-                    }else{
-                        if(BotonClear || botonPulsado_Clear){
-                            // Deshabilitamos todos los players
-                            repeticion = 0x00;
-                            tablaPlayers[0] = tablaPlayers[1] = tablaPlayers[2] = tablaPlayers[3] = tablaPlayers[4] = tablaPlayers[5] = tablaPlayers[6] = tablaPlayers[7] = false; // deshabilitamos toods los players
-                            botonPulsado_Clear = false;
-                            lcd_write2lines("Todos los player","desactivados");
-                            tablaLedPlayers = 0x00;
-                        }
-                        else{
-                            if(BotonCashOut || botonPulsado_CashOut){
-                                // Habilitamos todos los players
-                                repeticion = 0x00;                            
-                                tablaPlayers[0] = tablaPlayers[1] = tablaPlayers[2] = tablaPlayers[3] = tablaPlayers[4] = tablaPlayers[5] = tablaPlayers[6] = tablaPlayers[7] = true; // habilitamos toods los players
-                                botonPulsado_CashOut = false;
-                                lcd_write2lines("Todos los player","activados");
-                                tablaLedPlayers = 0x7F;
-                            }
-                        }
-                    }
-                    GAME_Set_Players();
-                }
-                else{
-                    repeticion++;
-                }
-            }
-            */
             __delay_ms(125);
             if(timeoutMensaje > 0x00){
                 // entra solamente con timeoutMensaje activado
@@ -335,16 +290,16 @@ void main(void)
         // HOLD equivale a PORTA.RA7 = 1, y Game_Status es PORTA.RA7
         // Se encienden los leds de los players que apostaron a players
         finTransmision = apuestasPlayer = false;
-        oldDealerSelectPlayer = oldDealerPagaDealer = oldDealerPagaPlayer = oldKeypad = oldPlayerAPagar = repeticion = 0x00;
+        oldDealerSelectPlayer = oldPlayerAPagar = repeticion = 0x00;
         player[0]=player[1]=player[2]=player[3]=player[4]=player[5]=player[6]=0x00;
         playerAPagar = 0x00;
         contador = 0x00;
         clearBuffer();
         lcd_write2lines("Solicitando","apuesta players");
         // solicitamos la tabla de players al servidor
+        printf("|08#\r\n");
         while(!apuestasPlayer){
-            printf("|08#\r\n");
-            __delay_ms(500);
+            __delay_ms(50);
             if(finTransmision){
                 // verificamos si recibimos el mensaje de tabla de players |08;xX
                 if(respuestaRaspBerryPi[2] == '8'){
@@ -385,16 +340,30 @@ void main(void)
                 clearBuffer();
             }
             contador++;
-            if(contador > 60){
-                // significa que pasaron 30 segundos con un delay de 500 ms,
+            if(contador > 200){
+                // significa que pasaron 10 segundos con un delay de 50 ms,
                 // se asigna cero por default para no demorar juego
                 tablaLedPlayers = 0x00;
                 apuestasPlayer = true; // seteamos la salida controlada
                 finTransmision = false;
+                printf("|00;Error: tabla de apuesta de players no recibida#\r\n");
                 break; // forzamos salida, si falla tenemos la salida controlada seteada
+            }
+            else{
+                switch(contador){
+                    case 50:
+                    case 100:
+                    case 150:
+                        // reintentos cada 2,5 segundos
+                        printf("|08#\r\n");
+                        break;
+                    default:
+                        break;
+                }
             }
         }
         botonPulsado_Clear = botonPulsado_CashOut = botonPulsado_Bet = botonPulsado_Hold = false;
+        pagoPlayerLiberado = true, pagoDealerLiberado = true;
         tablaLedPlayersBackUp = tablaLedPlayers;
         GAME_Set_Players();
         lcd_write2lines("Juego en curso","");
@@ -421,10 +390,8 @@ void main(void)
                 //GAME_Set_Player();
             }
             if( (dealerPagaDealer > 0) && (botonPagoDealer) ){
-                // 8 antirrebotes equivalen a no volver a disparar el premio por un valor de ~ timeout / 2
-                if( (dealerPagaDealer != oldDealerPagaDealer) || (repeticion > (8*antirrebote)) ){
-                    oldDealerPagaDealer = dealerPagaDealer;
-                    repeticion = 0x00;
+                if(pagoDealerLiberado){
+                    pagoDealerLiberado = false; 
                     // se deben pulsar las dos teclas simultaneamente por seguridad
                     playerAPagar = 0x00;
                     //sprintf(mensajeSpi,"|06;0;%u#\r\n",dealerPagaDealer);
@@ -445,17 +412,14 @@ void main(void)
                     }
                     GAME_Clear_Players(); // Apaga todos los leds indicadores de los players
                 }
-                else{
-                    repeticion++;
-                }
+            }
+            else{
+                pagoDealerLiberado = true;
             }
             if( (dealerPagaPlayer > 0) && (botonPagoPlayer) && (playerAPagar > 0) ){
-                // 8 antirrebotes equivalen a no volver a disparar el premio por un valor de ~ timeout / 2
-                if( (dealerPagaPlayer != oldDealerPagaPlayer) || (playerAPagar != oldPlayerAPagar) || (repeticion > (8*antirrebote)) ){
+                if(pagoPlayerLiberado){
+                    pagoPlayerLiberado = false;
                     GAME_Set_Players();
-                    oldDealerPagaPlayer = dealerPagaPlayer;
-                    oldPlayerAPagar = playerAPagar;
-                    repeticion = 0x00;
                     // se debe elegir primero el nro de player a pagar y luego el premio
                     // ademas de pulsar la tecla de pago por seguridad
                     //sprintf(mensajeSpi,"|06;%u;%u#\r\n",playerAPagar,dealerPagaPlayer);
@@ -478,9 +442,9 @@ void main(void)
                         escaleraReal = false;
                     }
                 }
-                else{
-                    repeticion++;
-                }
+            }
+            else{
+                pagoPlayerLiberado = true;
             }
             if(botonPulsado_Clear){
                 INTCONbits.TMR0IE = 0; // Deshabilita blink por TMR0
