@@ -175,6 +175,10 @@
 #define GAME_Status_SetHold()       IO_RA7_SetHigh()
 #define GAME_Status_Toggle()        IO_RA7_Toggle()
 
+// ****************************************************************************
+// ********************               PORT B               ********************
+// ****************************************************************************
+
 // get/set IO_RB0 aliases
 #define IO_RB0_TRIS                 TRISBbits.TRISB0
 #define IO_RB0_LAT                  LATBbits.LATB0
@@ -223,7 +227,7 @@
 #define IO_RB4_GetValue()           PORTBbits.RB4
 #define IO_RB4_SetDigitalInput()    do { TRISBbits.TRISB4 = 1; } while(0)
 #define IO_RB4_SetDigitalOutput()   do { TRISBbits.TRISB4 = 0; } while(0)
-// PORTB Bit7 = Entrada boton Bet
+// PORTB Bit4 = Entrada boton Bet
 #define BotonBet                    PORTBbits.RB4 // Alias del pin
 
 // get/set IO_RB5 aliases
@@ -236,7 +240,7 @@
 #define IO_RB5_GetValue()           PORTBbits.RB5
 #define IO_RB5_SetDigitalInput()    do { TRISBbits.TRISB5 = 1; } while(0)
 #define IO_RB5_SetDigitalOutput()   do { TRISBbits.TRISB5 = 0; } while(0)
-// PORTB Bit7 = Entrada boton Bet
+// PORTB Bit5 = Entrada boton Bet
 #define BotonHold                    PORTBbits.RB5 // Alias del pin
 
 // get/set IO_RB6 aliases
@@ -251,10 +255,6 @@
 #define IO_RB6_SetDigitalOutput()   do { TRISBbits.TRISB6 = 0; } while(0)
 // PORTB Bit6 = Entrada boton CashOut
 #define BotonCashOut                 PORTBbits.RB6 // Alias del pin
-
-// ****************************************************************************
-// ********************               PORT B               ********************
-// ****************************************************************************
 
 // get/set IO_RB7 aliases
 #define IO_RB7_TRIS                 TRISBbits.TRISB7
@@ -462,7 +462,6 @@
 #define IO_RD6_SetDigitalInput()    do { TRISDbits.TRISD6 = 1; } while(0)
 #define IO_RD6_SetDigitalOutput()   do { TRISDbits.TRISD6 = 0; } while(0)
 // PortD Bit6 = Salida RW (ReadWrite) para LCD
-// RW Se conectó directamente a cero, es decir en modo escritura
 #define	LCD_RW_SetHigh()            IO_RD6_SetHigh()
 #define	LCD_RW_SetLow()             IO_RD6_SetLow()
 
@@ -476,10 +475,9 @@
 #define IO_RD7_GetValue()           PORTDbits.RD7
 #define IO_RD7_SetDigitalInput()    do { TRISDbits.TRISD7 = 1; } while(0)
 #define IO_RD7_SetDigitalOutput()   do { TRISDbits.TRISD7 = 0; } while(0)
-// PortD Bit67 = Salida para control de backligth LCD. Dependiento del 
-// transistor usado (NPN o PNP) se debe ajustar los alias de abajo
-#define	LCD_BackLight_On()          IO_RD7_SetHigh()
-#define	LCD_BackLight_Off()         IO_RD7_SetLow()
+// PortD Bit7 = Salida control rele para VGND
+#define	SYSTEM_Power_On()           IO_RD7_SetHigh()
+#define	SYSTEM_Power_Off()          IO_RD7_SetLow()
 
 // ****************************************************************************
 // ********************               PORT E               ********************

@@ -69,14 +69,15 @@ void TMR0_Initialize(void)
 {
     // Set TMR0 to the options selected in the User Interface
 
-    timer0ReloadValL = 0xF6;
-    timer0ReloadValH = 0xC2;
+    // valor inicial 0xC2F6
+    //timer0ReloadValH = 0xC2;
+    //timer0ReloadValL = 0xF6;
+
+    // +1/4 de valor anterior 0x9238
+    timer0ReloadValH = 0xF3;
+    timer0ReloadValL = 0xB3;
     
-    // TMR0H 0; 
-    //TMR0H = 0x00;
     TMR0H = timer0ReloadValH;
-    // TMR0L 56; 
-    //TMR0L = 0x38;
     TMR0L = timer0ReloadValL;
 	
     // Load TMR0 value to the 8-bit reload variable
@@ -140,7 +141,7 @@ void TMR0_ISR(void)
     TMR0H = timer0ReloadValH;
     TMR0L = timer0ReloadValL;
 
-    PORTA = (PORTA & 0x80) | (~PORTA & 0x7F);
+    PORTA = (uint8_t) (PORTA & 0x80) | (~PORTA & 0x7F);
     
     if(TMR0_InterruptHandler)
     {
