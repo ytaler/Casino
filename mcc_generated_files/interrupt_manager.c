@@ -71,7 +71,7 @@ void interrupt INTERRUPT_InterruptManagerHigh (void)
             // A 115200 Baudios, deberia tomar 174 us aprox en recibir todos los datos, 8,6 us aprox por dato
             PIR1bits.RCIF = 0;
             uartTemp = RCREG;
-            //printf("*Valor: %u - Char: %c*\r\n",uartTemp,uartTemp);
+            //printf("|00;Valor: %u - Char: %c#*\r\n",uartTemp,uartTemp);
             if( (indiceRespuesta == 0) && (uartTemp == '|') ){
                 // significa comienzo de string, necesariamente debe venir '|' primero para indicar inicio
                 respuestaRaspBerryPi[indiceRespuesta] = uartTemp;
@@ -105,7 +105,7 @@ void interrupt INTERRUPT_InterruptManagerHigh (void)
             if(PIE1bits.SSPIE == 1 && PIR1bits.SSPIF == 1){
                 // Recepcion SPI
                 PIR1bits.SSPIF = 0;
-                printf("|00;SPI IRQ");
+                printf("|00;SPI IRQ#\r\n");
             }
             else{
                 if(INTCONbits.TMR0IE == 1 && INTCONbits.TMR0IF == 1){
@@ -113,7 +113,7 @@ void interrupt INTERRUPT_InterruptManagerHigh (void)
                     TMR0_ISR();
                 }
                 else
-                    printf("|00;Error interrupcion no manejada");
+                    printf("|00;Error interrupcion no manejada#\r\n");
             }
         }
     }
