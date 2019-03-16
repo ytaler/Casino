@@ -58,7 +58,7 @@ void interrupt INTERRUPT_InterruptManagerHigh (void)
     uint8_t uartTemp, uartTempAntes;
     extern bool finTransmision;
     extern uint8_t indiceRespuesta;
-    extern char respuestaRaspBerryPi[18];
+    extern char respuestaRaspBerryPi[20];
     
     if(INTCONbits.RBIE == 1 && INTCONbits.RBIF == 1){
         // RB<4:7> pin status change IRQ
@@ -81,7 +81,7 @@ void interrupt INTERRUPT_InterruptManagerHigh (void)
                 // caso contrario suponemos que ya recibio el primer byte
                 // por lo que verificamos que sea asi
                 //uartTemp = (uint8_t) toupper((char) uartTemp);
-                if( (indiceRespuesta > 0) && (indiceRespuesta < 18) ){
+                if( (indiceRespuesta > 0) && (indiceRespuesta < 20) ){
                     uartTempAntes = uartTemp;
                     filtroCaracteres(&uartTemp);
                     respuestaRaspBerryPi[indiceRespuesta] = uartTemp;
@@ -135,7 +135,9 @@ void RB47_ISR(void)
 void filtroCaracteres(uint8_t *caracter){
     // verificamos que no se sea un valor menor a 48 (numero cero en ascii)
     if(*caracter < 48)
-        *caracter = 0x00;
+        // la excepcion es el # que indica fin de mensaje
+        if(*caracter != 35)
+            *caracter = 0x00;
     else{
         // sino verificamos que no sea un numero mayor a 102 (letra f ascii)
         if(*caracter > 102){
@@ -146,6 +148,7 @@ void filtroCaracteres(uint8_t *caracter){
         else{
             // luego sigue la franja despues de 9 y antes de A
             if( (*caracter > 57) && (*caracter < 65) ){
+                // la excepcion es el punto y coma ;
                 if(*caracter != 59)
                     *caracter = 0x00;
             }
