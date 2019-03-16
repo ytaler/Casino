@@ -15,6 +15,7 @@
 #include <stdint.h>        /* For uint8_t definition */
 #include <stdbool.h>       /* For true/false definition */
 #include <ctype.h>
+#include <string.h>
 
 #endif
 
@@ -42,7 +43,7 @@ uint8_t i, repeticion, indiceRespuesta, contador, diferenciaAscii;
 uint16_t timeoutMensaje;
 bool finTransmision = false;
 //char mensajeSpi[20];
-char respuestaRaspBerryPi[18];
+char respuestaRaspBerryPi[20];
 
 void clearBuffer(void);
 /******************************************************************************/
@@ -229,25 +230,41 @@ void main(void)
                     // verificamos si no hubo timeout y la respuesta de la raspberry
                     if(contador < 200){
                         if(respuestaRaspBerryPi[2] == '4'){
-                            // ingresa solo con un mensaje valido
-                            for(i = 0; i < 14; i++){
+                            // ingresa solo con un mensaje valido, eliminamos header mensaje
+                            for(i = 0; i < 16; i++){
                                 respuestaRaspBerryPi[i] = respuestaRaspBerryPi[i+4];                               
                             }
                             // Asigna cero en caso de no haber recibido nada
                             if(!isdigit(respuestaRaspBerryPi[0])){
                                 respuestaRaspBerryPi[0] = '0';
-                                respuestaRaspBerryPi[1] = 0x00;
+                                respuestaRaspBerryPi[1] = '#';
+                                respuestaRaspBerryPi[2] = 0x00;
                             }
-                            // Escribimos info en LCD
-                            sprintf(line[0],"CashOut Player %u",playerAPagar);
-                            //sprintf(line[1], "$ %lu", monto);
-                            sprintf(line[1],"$ %s", respuestaRaspBerryPi);
-                            lcd_write2lines(line[0],line[1]);
-                            playerAPagar = 0x00; // Elimina valor variable       
-                            timeoutMensaje = 60000/delayVueltaMs; // = 480 --> Equivale aprox 60 segundos con delay de 125 ms
+                            // verificamos la correcta recepcion del mensaje
+                            if(respuestaRaspBerryPi[strlen(respuestaRaspBerryPi)-1] == '#'){
+                                respuestaRaspBerryPi[strlen(respuestaRaspBerryPi)-1] = 0x00; // borramos numeral
+                                // Escribimos info en LCD
+                                sprintf(line[0],"CashOut Player %u",playerAPagar);
+                                //sprintf(line[1], "$ %lu", monto);
+                                sprintf(line[1],"$ %s", respuestaRaspBerryPi);
+                                lcd_write2lines(line[0],line[1]);
+                                playerAPagar = 0x00; // Elimina valor variable       
+                                timeoutMensaje = 60000/delayVueltaMs; // = 480 --> Equivale aprox 60 segundos con delay de 125 ms                                
                             }
+                            else{
+                                printf("|00;Error Cash Out: mensaje incompleto recibido ");
+                                for(i=0; i<20; i++)
+                                    printf("%u ", respuestaRaspBerryPi[i]);
+                                printf("para player %u#\r\n", playerAPagar);
+                                lcd_write2lines("Error en Rta.","Reintente");
+                                timeoutMensaje = 20000/delayVueltaMs; // = 160 --> Equivale aprox 20 segundos con delay de 125 ms
+                            }
+                        }
                         else{
-                            printf("|00;Error Cash Out: valor recibido %s para player %u#\r\n", respuestaRaspBerryPi, playerAPagar);
+                            printf("|00;Error Cash Out: mensaje incorrecto recibido");
+                            for(i=0; i<20; i++)
+                                printf("%u ", respuestaRaspBerryPi[i]);
+                            printf("para player %u#\r\n", playerAPagar);
                             lcd_write2lines("Respuesta no re_","cibida,reintente");
                             timeoutMensaje = 20000/delayVueltaMs; // = 160 --> Equivale aprox 20 segundos con delay de 125 ms                            
                         }
@@ -292,52 +309,74 @@ void main(void)
         finTransmision = apuestasPlayer = false;
         oldDealerSelectPlayer = oldPlayerAPagar = repeticion = 0x00;
         player[0]=player[1]=player[2]=player[3]=player[4]=player[5]=player[6]=0x00;
+        indiceRespuesta = 0x00;
         playerAPagar = 0x00;
         contador = 0x00;
         clearBuffer();
+        printf("|08#\r\n");
         lcd_write2lines("Solicitando","apuesta players");
         // solicitamos la tabla de players al servidor
-        printf("|08#\r\n");
         while(!apuestasPlayer){
             __delay_ms(50);
             if(finTransmision){
                 // verificamos si recibimos el mensaje de tabla de players |08;xX
                 if(respuestaRaspBerryPi[2] == '8'){
-                    // se recibe el msb primero y luego el lsb
-                    // la recepcion por uart tiene caracteres filtrados, por lo tanto
-                    // verificamos unicamente que sea de 0 a 7 (48 a 55 ascii)
-                    if(respuestaRaspBerryPi[4] < 56){
-                        diferenciaAscii = 48;
+                    // ingresa solo con un mensaje valido, eliminamos header mensaje
+                    for(i = 0; i < 16; i++){
+                        respuestaRaspBerryPi[i] = respuestaRaspBerryPi[i+4];                               
                     }
-                    else{
-                        // sino esta dentro de los valores esperados asignamos su propio
-                        // valor para anularlo luego de la resta en el momenot de asignacion
-                        diferenciaAscii = (uint8_t) respuestaRaspBerryPi[4];
-                    }
-                    tablaLedPlayers = (uint8_t) ( ( (uint8_t) respuestaRaspBerryPi[4] - diferenciaAscii ) << 4 );
-                    // lo mismo que lo anterior, como viene filtrado, solamente
-                    // verificamos que sea distinto de I o i
-                    if( respuestaRaspBerryPi[5] < 58){
-                        // de 0 a 9
-                        diferenciaAscii = 48;
-                    }
-                    else{
-                        // de A-F o a-f
-                        if( (respuestaRaspBerryPi[5] != 73) && (respuestaRaspBerryPi[5] != 105) ){
-                            diferenciaAscii = 55;
+                    // verificamos la correcta recepcion del mensaje
+                    if(respuestaRaspBerryPi[strlen(respuestaRaspBerryPi)-1] == '#'){
+                        respuestaRaspBerryPi[strlen(respuestaRaspBerryPi)-1] = 0x00; // borramos numeral
+                        // se recibe el msb primero y luego el lsb
+                        // la recepcion por uart tiene caracteres filtrados, por lo tanto
+                        // verificamos unicamente que sea de 0 a 7 (48 a 55 ascii)
+                        if(respuestaRaspBerryPi[0] < 56){
+                            diferenciaAscii = 48;
                         }
                         else{
                             // sino esta dentro de los valores esperados asignamos su propio
                             // valor para anularlo luego de la resta en el momenot de asignacion
-                            diferenciaAscii = (uint8_t) respuestaRaspBerryPi[5];
+                            diferenciaAscii = (uint8_t) respuestaRaspBerryPi[0];
                         }
+                        tablaLedPlayers = (uint8_t) ( ( (uint8_t) respuestaRaspBerryPi[0] - diferenciaAscii ) << 4 );
+                        // lo mismo que lo anterior, como viene filtrado, solamente
+                        // verificamos que sea distinto de I o i
+                        if( respuestaRaspBerryPi[1] < 58){
+                            // de 0 a 9
+                            diferenciaAscii = 48;
+                        }
+                        else{
+                            // de A-F o a-f
+                            if( (respuestaRaspBerryPi[1] != 73) && (respuestaRaspBerryPi[1] != 105) ){
+                                diferenciaAscii = 55;
+                            }
+                            else{
+                                // sino esta dentro de los valores esperados asignamos su propio
+                                // valor para anularlo luego de la resta en el momenot de asignacion
+                                diferenciaAscii = (uint8_t) respuestaRaspBerryPi[5];
+                            }
+                        }
+                        tablaLedPlayers = (uint8_t) ( tablaLedPlayers | ( (uint8_t) respuestaRaspBerryPi[1] - diferenciaAscii) );
+                        apuestasPlayer = true;
                     }
-                    tablaLedPlayers = (uint8_t) ( tablaLedPlayers | ( (uint8_t) respuestaRaspBerryPi[5] - diferenciaAscii) );
-                    apuestasPlayer = true;
+                    else{
+                        finTransmision = false;
+                        printf("|00;Error, mensaje incompleto recibido: ");
+                        for(i=0; i<20; i++)
+                            printf("%u ", respuestaRaspBerryPi[i]);
+                        printf("#\r\n");
+                        clearBuffer();
+                    }
                 }
-                else
+                else{
                     finTransmision = false;
-                clearBuffer();
+                    printf("|00;Error, mensaje incorrecto recibido: ");
+                    for(i=0; i<20; i++)
+                        printf("%u ", respuestaRaspBerryPi[i]);
+                    printf("#\r\n");
+                    clearBuffer();
+                }
             }
             contador++;
             if(contador > 200){
@@ -494,7 +533,7 @@ void main(void)
 
 void clearBuffer(void){
     uint8_t index;
-    for(index=0; index < 18; index++){
+    for(index=0; index < 20; index++){
         respuestaRaspBerryPi[index]=0x00;
     }
 }
