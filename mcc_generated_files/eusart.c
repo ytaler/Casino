@@ -100,11 +100,13 @@ void EUSART_Initialize(void) {
     // Estos valores dependen del clock del micro!! REVISAR!! Pagina 252
     // Para SYNC=0, BGRH=1 y BGR16=1 a 16 MHz el valor para 115200 baudios con un error de -0.79 es 34
     // Esta configuración se conoce como 8N1. Para utilizar con minicom desactivar control de flujo por hardware.
-    SPBRGH=0x00;
-    SPBRG=207; // para 16 MHz a 19,2 K
+    SPBRGH=0x01; // para 16 MHz a 9,6 K
+    SPBRG=0xA0; // para 16 MHz a 9,6 K    
+    //SPBRGH=0x01; // para 16 Mhz a 10417
+    //SPBRG=0x7F; // para 16 Mhz a 10417
+    //SPBRGH=0x00; // para 16 MHz a 19,2 K
+    //SPBRG=207; // para 16 MHz a 19,2 K
     //SPBRG=34; // para 16 MHz a 115,2 K
-    //SPBRG=103; // para 4 MHz a 115,2 K
-    //SPBRG=138; // para 64 MHz a 115,2 K
 }
 
 bool EUSART_is_tx_ready(void)
